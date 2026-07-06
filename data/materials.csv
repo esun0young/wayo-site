@@ -1,0 +1,31 @@
+category,key,label,price,color,option
+config,base,기본 공사비(만원),1800,,
+config,rangeLo,견적 하한 배율,0.9,,
+config,rangeHi,견적 상한 배율,1.15,,
+floor,oak,오크 원목,340,#C99A66,wood
+floor,walnut,월넛 원목,390,#6E4B33,wood
+floor,porcelain,그레이 포세린,520,#A7AAAC,
+floor,limestone,베이지 라임스톤,580,#D7CBB5,
+wall,paint,도장,290,,
+wall,paper,도배,180,,
+wall,mix,믹스,240,,
+paint,white,화이트,,#F2EEE7,
+paint,ivory,웜 아이보리,,#EAE1D2,
+paint,greige,그레이지,,#C9C1B3,
+paint,sage,세이지 그린,,#A7B29B,
+paper,lgray,라이트 그레이,,#DAD9D5,
+paper,oatmeal,오트밀,,#DED4C2,
+paper,beige,웜 베이지,,#D8C6AC,
+paper,blue,소프트 블루,,#BFCBD6,
+artwall,paint,도장 마감,0,,
+artwall,coral,코랄 포인트,45,#FF8282,
+artwall,slat,우드 슬랫,120,#A9713F,
+artwall,stone,스톤 패널,160,#BAB4AC,
+tile,white,화이트 스퀘어,140,#EAE8E3,0.30
+tile,porcelain,그레이 포세린,190,#A7AAAC,0.60
+tile,terrazzo,테라조,230,#E5E1D9,0.60
+tile,limestone,베이지 라임스톤,210,#D7CBB5,0.60
+molding,none,몰딩 없음 (마이너스),90,,
+molding,ceiling,천장 몰딩,40,,
+light,warm,웜 3000K,,,
+light,day,주광 5000K,,,

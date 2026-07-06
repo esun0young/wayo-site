@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wayo — 설계부터 시공, 기록까지 한 흐름으로</title>
+<meta name="description" content="Wayo Studio — 설계(Plan and B) · 시공(Plan B) · 시각화(Wayo). 웨딩홀의 하루가 담기는 공간을 한 흐름으로.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/fonts-archive/Paperlogy/Paperlogy.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,16..72,400;0,16..72,500;1,16..72,400;1,16..72,500;1,16..72,600&display=swap">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Wayo",
+  "url": "https://wayo.kr",
+  "email": "studio@wayo.kr",
+  "sameAs": ["https://instagram.com/wayo.studio"],
+  "description": "설계(Plan and B) · 시공(Plan B) · 시각화(Wayo) — 웨딩홀 인테리어를 하나의 흐름으로.",
+  "subOrganization": [
+    { "@type": "Organization", "name": "Plan and B", "description": "공간 설계·디자인 (웨딩홀 전문)" },
+    { "@type": "Organization", "name": "Plan B", "description": "현장 시공·감리" }
+  ]
+}
+</script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{-webkit-text-size-adjust:100%;}
+@media (prefers-reduced-motion:no-preference){html{scroll-behavior:smooth;}}
+body{background:#F5F2EE;color:#0A0A0A;font-family:'Pretendard',sans-serif;line-height:1.75;-webkit-font-smoothing:antialiased;overflow-x:hidden;word-break:keep-all;}
+::selection{background:#FF8282;color:#fff;}
+input,select,textarea,button{font:inherit;color:inherit;}
+@keyframes rise{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:none;}}
+@keyframes toastRise{from{opacity:0;transform:translateX(-50%) translateY(20px);}to{opacity:1;transform:translateX(-50%);}}
+/* ── 디자인 툴 style-hover / style-focus 전환 ── */
+.nvl{transition:color .2s;}
+.nvl:hover{color:#0A0A0A;}
+.btn-ink{transition:background .2s;}
+.btn-ink:hover{background:#E96B6B !important;}
+.btn-coral{transition:background .2s;}
+.btn-coral:hover{background:#F5F2EE !important;}
+.lnk{transition:color .2s;}
+.lnk:hover{color:#E96B6B;}
+.hero-ghost{transition:border-color .2s;}
+.hero-ghost:hover{border-color:#E96B6B !important;}
+.svc-card{transition:transform .25s;}
+.svc-card:hover{transform:translateY(-4px);}
+.arw{transition:background .2s,border-color .2s,color .2s;}
+.arw:hover{background:#0A0A0A;border-color:#0A0A0A;color:#F5F2EE;}
+.fld{transition:background .2s;}
+.fld:focus{background:#E8E2D9 !important;outline:none;}
+.fld-d{transition:background .2s;}
+.fld-d:focus{background:rgba(245,242,238,.14) !important;outline:none;}
+.nav-burger{display:none;}
+#mnav{display:none;background:rgba(245,242,238,.97);flex-direction:column;padding:8px 0 16px;}
+#mnav.open{display:flex;}
+@media (max-width:840px){.nav-links{display:none !important;}.nav-burger{display:inline-flex !important;}}
+@media (max-width:840px){.two-col{grid-template-columns:1fr !important;}}
+@media (max-width:760px){.svc-grid{grid-template-columns:1fr !important;}}
+@media (max-width:640px){.form-row{grid-template-columns:1fr !important;}}
+.arc-scroll{-ms-overflow-style:none;scrollbar-width:none;}
+.arc-scroll::-webkit-scrollbar{display:none;}
+@media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;scroll-behavior:auto !important;}}
+</style>
+</head>
+<body>
+
+<!-- Wayo 원형 마크 — 1회 정의 후 재사용 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wayo-mark" viewBox="0 0 1024 1024">
+    <rect width="1024" height="1024" rx="512" fill="#FF8282"/>
+    <path d="M175.975 673.26C184.591 667.178 195.291 664.753 205.859 666.422C216.419 668.098 225.982 673.729 232.305 682.176C233.84 684.088 236.671 687.069 239.819 689.844C306.817 744.709 435.015 772.707 492.779 726.788C496.041 724.322 499.043 721.73 501.971 718.868C511.791 709.522 524.833 704.581 538.371 705.298C551.899 706.006 564.816 712.313 574.135 722.666C583.453 733.02 588.367 746.528 587.651 760.056C586.942 773.594 580.662 786.043 570.337 794.828C563.931 800.361 557.356 805.339 550.345 809.986C412.588 885.662 282.527 832.289 182.385 749.456C176.837 743.865 170.898 737.233 165.513 729.324C159.67 720.538 157.565 709.642 159.523 699.13C161.489 688.613 167.358 679.343 175.975 673.26Z" fill="white"/>
+    <path d="M273.555 253.127C287.989 245.604 305.612 244.374 322.021 249.541C338.43 254.708 352.13 265.804 359.579 280.218C367.059 294.642 367.678 311.204 361.827 326.428C360.775 329.172 359.723 331.918 358.671 334.662C339.731 384.058 320.789 433.454 301.849 482.851C300.797 485.595 299.746 488.34 298.693 491.085C294.092 503.055 284.61 512.938 272.746 518.691C260.857 524.436 247.559 525.58 235.364 521.739C223.169 517.899 212.956 509.352 206.559 497.849C200.186 486.353 198.152 472.841 201.317 460.417C202.044 457.571 202.771 454.725 203.499 451.879C216.596 400.642 229.695 349.405 242.792 298.168C243.52 295.322 244.247 292.476 244.974 289.63C248.999 273.831 259.091 260.64 273.555 253.127Z" fill="white"/>
+    <path d="M498.955 274.746C513.241 266.942 530.766 265.344 547.194 270.164C563.622 274.984 577.468 285.784 585.202 300.048C592.964 314.321 593.979 330.888 588.508 346.246C587.43 349.28 586.352 352.315 585.274 355.349C565.868 409.96 546.46 464.571 527.053 519.182C525.975 522.216 524.897 525.251 523.819 528.285C519.495 540.423 510.243 550.567 498.479 556.596C486.693 562.618 473.359 564.032 461.031 560.415C448.702 556.798 438.277 548.413 431.669 536.995C425.082 525.583 422.852 512.069 425.85 499.542C426.602 496.413 427.352 493.282 428.104 490.153C441.633 433.817 455.162 377.482 468.69 321.146C469.442 318.016 470.194 314.886 470.946 311.757C474.74 295.906 484.642 282.542 498.955 274.746Z" fill="white"/>
+  </symbol>
+</svg>
+
+<!-- ══════════ NAV ══════════ -->
+<header style="position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(245,242,238,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);">
+  <div style="max-width:1220px;margin:0 auto;padding:0 clamp(20px,5vw,72px);height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+    <a href="#top" style="display:flex;align-items:center;gap:9px;text-decoration:none;color:#0A0A0A;">
+      <svg style="width:20px;height:20px;display:block;" aria-hidden="true"><use href="#wayo-mark"/></svg>
+      <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:13px;letter-spacing:.22em;">WAYO</span>
+    </a>
+    <nav class="nav-links" style="display:flex;align-items:center;gap:clamp(20px,3vw,36px);">
+      <a class="nvl" href="#about" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">About</a>
+      <a class="nvl" href="#services" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">Services</a>
+      <a class="nvl" href="#archive" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">Archive</a>
+      <a class="nvl" href="#contact" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">Contact</a>
+    </nav>
+    <button class="nav-burger" id="burger" aria-label="메뉴 열기" aria-expanded="false" style="align-items:center;justify-content:center;flex-direction:column;gap:5px;width:44px;height:44px;background:none;border:none;cursor:pointer;margin-right:-10px;">
+      <span style="display:block;width:20px;height:1.5px;background:#0A0A0A;"></span>
+      <span style="display:block;width:20px;height:1.5px;background:#0A0A0A;"></span>
+    </button>
+  </div>
+  <nav id="mnav">
+    <a href="#about" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#0A0A0A;text-decoration:none;padding:15px clamp(20px,5vw,72px);">About</a>
+    <a href="#services" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#0A0A0A;text-decoration:none;padding:15px clamp(20px,5vw,72px);">Services</a>
+    <a href="#archive" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#0A0A0A;text-decoration:none;padding:15px clamp(20px,5vw,72px);">Archive</a>
+    <a href="#contact" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#E96B6B;text-decoration:none;padding:15px clamp(20px,5vw,72px);">Contact</a>
+  </nav>
+</header>
+
+<main id="top" style="padding-top:64px;">
+
+<!-- ══════════ 1 · HERO ══════════ -->
+<section style="min-height:calc(100svh - 64px);display:flex;flex-direction:column;justify-content:center;max-width:1220px;margin:0 auto;padding:clamp(48px,8vh,96px) clamp(20px,5vw,72px);">
+  <p style="font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:#E96B6B;animation:rise .7s cubic-bezier(.2,.7,.2,1) both;">Interior Design · Construction · Visualization</p>
+  <h1 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:800;font-size:clamp(42px,7.8vw,108px);line-height:1.06;letter-spacing:-.03em;text-wrap:balance;margin-top:clamp(24px,4vh,44px);max-width:16ch;animation:rise .7s cubic-bezier(.2,.7,.2,1) .12s both;">웨딩홀의 하루가 담기는 공간,<br>설계부터 시공·기록까지 <span style="color:#FF8282;">한 흐름으로.</span></h1>
+  <div style="display:flex;flex-wrap:wrap;align-items:center;gap:24px 44px;margin-top:clamp(30px,5.5vh,56px);animation:rise .7s cubic-bezier(.2,.7,.2,1) .24s both;">
+    <a class="btn-ink" href="#contact" style="display:inline-flex;align-items:center;gap:10px;background:#0A0A0A;color:#F5F2EE;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:18px 34px;border-radius:999px;text-decoration:none;white-space:nowrap;flex:none;">프로젝트 문의 <span aria-hidden="true">→</span></a>
+    <a class="hero-ghost" href="#archive" style="display:inline-flex;align-items:center;gap:10px;color:#0A0A0A;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;padding:18px 6px;text-decoration:none;white-space:nowrap;flex:none;border-bottom:1px solid rgba(10,10,10,.28);">완공 기록 보기 <span aria-hidden="true">→</span></a>
+    <p style="font-size:clamp(15px,1.8vw,17px);line-height:1.7;color:rgba(10,10,10,.5);max-width:34ch;">디자인이 도면에서 끝나지 않도록 — 설계, 시공, 완공의 장면까지 끊기지 않는 흐름으로 완성합니다.</p>
+  </div>
+  <div style="display:flex;justify-content:space-between;align-items:baseline;gap:16px;margin-top:auto;padding-top:clamp(48px,8vh,88px);animation:rise .7s cubic-bezier(.2,.7,.2,1) .36s both;">
+    <span style="font-family:'Newsreader',Georgia,serif;font-style:italic;font-size:15px;color:#B8B5A8;">Spaces that speak your way.</span>
+    <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;">Scroll ↓</span>
+  </div>
+</section>
+
+<!-- ══════════ 2 · ABOUT ══════════ -->
+<section id="about" style="scroll-margin-top:64px;">
+  <div style="max-width:1220px;margin:0 auto;padding:clamp(64px,9vw,130px) clamp(20px,5vw,72px) 0;">
+    <p style="font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:#B8B5A8;">01 — About</p>
+    <div class="two-col" style="display:grid;grid-template-columns:1fr 1.4fr;gap:clamp(28px,5vw,80px);margin-top:clamp(20px,3vw,32px);">
+      <h2 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(26px,3.4vw,40px);letter-spacing:-.02em;line-height:1.25;">우리가<br>일하는 방식</h2>
+      <div style="display:flex;flex-direction:column;gap:clamp(36px,5vw,56px);">
+        <div>
+          <p style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#E96B6B;">Mission</p>
+          <h3 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(20px,2.4vw,27px);line-height:1.4;letter-spacing:-.015em;margin-top:12px;">공간을 통해 사람의 이야기를 시각화한다.</h3>
+          <p style="font-size:15px;line-height:1.9;color:rgba(10,10,10,.5);margin-top:10px;max-width:52ch;">클라이언트의 삶·가치·취향을 이해하고, 그것이 공간으로 자연스럽게 흐르도록 설계합니다.</p>
+        </div>
+        <div>
+          <p style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#E96B6B;">Vision</p>
+          <h3 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(20px,2.4vw,27px);line-height:1.4;letter-spacing:-.015em;margin-top:12px;">인생의 모든 장면을 디자인한다.</h3>
+          <p style="font-size:15px;line-height:1.9;color:rgba(10,10,10,.5);margin-top:10px;max-width:52ch;">웨딩홀이라는 특별한 하루의 공간에서 출발해, 일상이 머무는 집의 공간까지 — 사람 인생의 모든 장면을 디자인하는 스튜디오로 성장합니다.</p>
+        </div>
+        <div>
+          <p style="font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#E96B6B;">Core Value</p>
+          <h3 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(20px,2.4vw,27px);line-height:1.4;letter-spacing:-.015em;margin-top:12px;">소통과 협업.</h3>
+          <p style="font-size:15px;line-height:1.9;color:rgba(10,10,10,.5);margin-top:10px;max-width:52ch;">좋은 공간은 디자이너 혼자 만들지 않습니다. 클라이언트와 함께 대화하고 그려가는 과정에서 진짜 의미가 생깁니다.</p>
+        </div>
+      </div>
+    </div>
+    <p style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:800;font-size:clamp(38px,7vw,104px);letter-spacing:-.03em;line-height:1.05;text-wrap:balance;padding:clamp(64px,10vw,140px) 0 clamp(56px,8vw,110px);">Spaces that speak<br><span style="font-family:'Newsreader',Georgia,serif;font-style:italic;font-weight:500;color:#FF8282;">your way.</span></p>
+  </div>
+</section>
+
+<!-- ══════════ 3 · SERVICES ══════════ -->
+<section id="services" style="scroll-margin-top:64px;background:#EDE8E1;border-radius:clamp(20px,3vw,36px);margin:0 clamp(8px,1.2vw,16px);">
+  <div style="max-width:1220px;margin:0 auto;padding:clamp(64px,9vw,130px) clamp(20px,5vw,72px);">
+    <p style="font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:#B8B5A8;">02 — Services</p>
+    <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:12px 32px;margin-top:clamp(20px,3vw,32px);">
+      <h2 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(26px,3.4vw,40px);letter-spacing:-.02em;line-height:1.25;">세 스튜디오, 하나의 흐름</h2>
+      <p style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:rgba(10,10,10,.45);">설계 <span style="color:#E96B6B;">→</span> 시공 <span style="color:#E96B6B;">→</span> 기록</p>
+    </div>
+    <div class="svc-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(14px,1.8vw,22px);margin-top:clamp(32px,5vw,52px);">
+      <div class="svc-card" style="border-radius:20px;padding:clamp(26px,3vw,36px);display:flex;flex-direction:column;background-color:#F5F2EE;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-family:'Newsreader',Georgia,serif;font-style:italic;font-size:30px;color:#FF8282;line-height:1;">01</span>
+          <span style="font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;">Design</span>
+        </div>
+        <div style="height:72px;display:flex;align-items:center;margin-top:clamp(28px,4vw,44px);">
+          <svg viewBox="252 414 1600 451" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plan and B" style="height:34px;width:auto;display:block;color:#0A0A0A;"><g id="Layer-1"><path d="M1731.821,542.587c70.05,20.211 120.179,84.397 120.179,155.23c0,95.006 -70.662,163.967 -168.026,163.967l-264.8,0c-10.259,0 -17.988,-7.737 -17.988,-17.988l0,-411.451c0,-10.251 7.729,-17.988 17.988,-17.988l255.967,0c42.497,0 77.056,33.962 77.056,75.705c0,16.876 -6.349,38.595 -20.376,52.524Zm87.956,155.909c0,-70.818 -61.88,-130.654 -135.131,-130.654l-252.975,0l0,263.293l252.975,0c74.512,0 135.131,-59.5 135.131,-132.639Zm-388.106,-161.296l243.47,0c22.032,0 44.825,-19.122 44.825,-51.114c0,-23.136 -23.733,-41.087 -44.146,-41.087l-244.149,0l0,92.201Zm-616.821,295.038c8.08,0 14.713,6.625 14.713,14.765c0,8.147 -6.633,14.78 -14.78,14.78c-44.862,0 -72.743,-34.857 -72.743,-90.963l0,-341.132c0,-8.737 6.588,-15.332 15.325,-15.332c8.737,0 15.325,6.595 15.325,15.332l0,341.132c0,22.659 5.476,60.776 42.161,61.418Zm246.16,-249.568c8.737,0 15.317,6.588 15.317,15.325l0,248.469c0,8.729 -6.58,15.317 -15.317,15.317c-8.737,0 -15.332,-6.588 -15.332,-15.317l0,-17.712c-22.979,23.867 -56.344,36.894 -95.103,36.894c-76.959,0 -139.555,-64.089 -139.555,-142.868c0,-77.145 63.902,-142.323 139.555,-142.323c38.752,0 72.124,13.027 95.103,36.901l0,-19.361c0,-8.737 6.595,-15.325 15.332,-15.325Zm-15.332,81.338c-16.294,-32.828 -53.517,-54.002 -95.103,-54.002c-58.732,0 -108.354,51.644 -108.354,112.771c0,62.485 48.607,113.323 108.354,113.323c41.482,0 78.704,-20.958 95.103,-53.464l0,-118.628Zm198.601,-83.552c75.287,0 120.232,47.011 120.232,125.753l0,140.249c0,8.737 -6.595,15.325 -15.325,15.325c-8.737,0 -15.325,-6.588 -15.325,-15.325l0,-138.041c0,-66.222 -30.209,-98.409 -92.343,-98.409c-44.482,0 -83.86,21.39 -100.624,54.569l0,181.881c0,8.737 -6.588,15.325 -15.325,15.325c-8.737,0 -15.332,-6.588 -15.332,-15.325l0,-248.461c0,-8.737 6.595,-15.325 15.332,-15.325c8.737,0 15.325,6.588 15.325,15.325l0,21.226c24.688,-25.076 60.985,-38.767 103.385,-38.767Zm-709.489,-166.096c97.364,0 168.033,68.953 168.033,163.96c0,75.429 -54.71,142.972 -127.26,157.103c-18.473,3.604 -49.6,3.514 -49.6,3.514l-243.306,0l0,107.906c0,8.737 -6.588,15.325 -15.325,15.325c-8.737,0 -15.332,-6.588 -15.332,-15.325l0,-414.495c0,-10.259 7.729,-17.988 17.988,-17.988l264.8,0Zm-252.289,30.642l0.157,153.373l0,109.921l252.803,0c73.258,0 135.146,-59.829 135.146,-130.654c0,-73.139 -60.627,-132.639 -135.146,-132.639l-252.96,0Zm678.423,6.773l40.438,50.987c0.269,0.328 0.53,0.746 0.53,1.164c0,0.91 -1.209,1.649 -2.678,1.649c-1.082,0 -2.149,-0.41 -2.559,-0.91l-8.192,-10.266l-60.179,0l-8.199,10.266c-0.395,0.5 -1.477,0.91 -2.544,0.91c-1.485,0 -2.693,-0.739 -2.693,-1.649c0,-0.418 0.269,-0.836 0.537,-1.164l40.43,-50.987c0.545,-0.657 1.35,-1.156 2.559,-1.156c1.209,0 2.014,0.5 2.552,1.156Zm24.852,39.319l-27.135,-35.006l-0.537,0l-27.143,35.006l54.815,0Zm57.187,-38.732c0,-1 1.209,-1.738 2.559,-1.738c1.209,0 1.738,0.246 2.276,0.582l75.228,48.167l0,-47.011c0,-1 1.216,-1.738 2.82,-1.738c1.619,0 2.828,0.739 2.828,1.738l0,51.562c0,0.91 -0.94,1.656 -2.552,1.656c-1.216,0 -1.746,-0.246 -2.425,-0.664l-75.086,-48.257l0,47.175c0,1 -1.209,1.746 -2.82,1.746c-1.619,0 -2.828,-0.746 -2.828,-1.746l0,-51.472Zm132.826,52.553c-1.619,0 -2.828,-0.739 -2.828,-1.738l0,-50.152c0,-1 1.209,-1.738 2.828,-1.738l40.296,0c24.583,0 44.601,11.505 44.601,26.814c0,15.063 -20.017,26.814 -44.601,26.814l-40.296,0Zm40.296,-50.323l-37.476,0l0,47.018l37.476,0c21.353,0 38.819,-10.266 38.819,-23.509c0,-13.407 -17.324,-23.509 -38.819,-23.509Z" style="fill:currentColor;"/></g></svg>
+        </div>
+        <h3 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(20px,2.3vw,25px);letter-spacing:-.015em;margin-top:16px;">Plan and B</h3>
+        <p style="font-size:14.5px;line-height:1.75;color:rgba(10,10,10,.5);margin-top:6px;">공간 설계·디자인 — 웨딩홀 전문</p>
+      </div>
+      <div class="svc-card" style="border-radius:20px;padding:clamp(26px,3vw,36px);display:flex;flex-direction:column;background-color:#F5F2EE;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-family:'Newsreader',Georgia,serif;font-style:italic;font-size:30px;color:#FF8282;line-height:1;">02</span>
+          <span style="font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;">Construction</span>
+        </div>
+        <div style="height:72px;display:flex;align-items:center;margin-top:clamp(28px,4vw,44px);">
+          <svg viewBox="252 414 1600 451" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Plan B" style="height:34px;width:auto;display:block;color:#0A0A0A;"><g id="Layer-1"><path d="M1731.821,542.587c70.05,20.211 120.179,84.397 120.179,155.23c0,95.006 -70.662,163.967 -168.026,163.967l-264.8,0c-10.259,0 -17.988,-7.737 -17.988,-17.988l0,-411.451c0,-10.251 7.729,-17.988 17.988,-17.988l255.967,0c42.497,0 77.056,33.962 77.056,75.705c0,16.876 -6.349,38.595 -20.376,52.524Zm-300.15,-5.387l243.47,0c22.032,0 44.825,-19.122 44.825,-51.114c0,-23.136 -23.733,-41.087 -44.146,-41.087l-244.149,0l0,92.201Zm388.106,161.296c0,-70.818 -61.88,-130.654 -135.131,-130.654l-252.975,0l0,263.293l252.975,0c74.512,0 135.131,-59.5 135.131,-132.639Zm-1004.927,133.742c8.08,0 14.713,6.625 14.713,14.765c0,8.147 -6.633,14.78 -14.78,14.78c-44.862,0 -72.743,-34.857 -72.743,-90.963l0,-341.132c0,-8.737 6.588,-15.332 15.325,-15.332c8.737,0 15.325,6.595 15.325,15.332l0,341.132c0,22.659 5.476,60.776 42.161,61.418Zm246.16,-249.568c8.737,0 15.317,6.588 15.317,15.325l0,248.469c0,8.729 -6.58,15.317 -15.317,15.317c-8.737,0 -15.332,-6.588 -15.332,-15.317l0,-17.712c-22.979,23.867 -56.344,36.894 -95.103,36.894c-76.959,0 -139.555,-64.089 -139.555,-142.868c0,-77.145 63.902,-142.323 139.555,-142.323c38.752,0 72.124,13.027 95.103,36.901l0,-19.361c0,-8.737 6.595,-15.325 15.332,-15.325Zm-15.332,81.338c-16.294,-32.828 -53.517,-54.002 -95.103,-54.002c-58.732,0 -108.354,51.644 -108.354,112.771c0,62.485 48.607,113.323 108.354,113.323c41.482,0 78.704,-20.958 95.103,-53.464l0,-118.628Zm198.601,-83.552c75.287,0 120.232,47.011 120.232,125.753l0,140.249c0,8.737 -6.595,15.325 -15.325,15.325c-8.737,0 -15.325,-6.588 -15.325,-15.325l0,-138.041c0,-66.222 -30.209,-98.409 -92.343,-98.409c-44.482,0 -83.86,21.39 -100.624,54.569l0,181.881c0,8.737 -6.588,15.325 -15.325,15.325c-8.737,0 -15.332,-6.588 -15.332,-15.325l0,-248.461c0,-8.737 6.595,-15.325 15.332,-15.325c8.737,0 15.325,6.588 15.325,15.325l0,21.226c24.688,-25.076 60.985,-38.767 103.385,-38.767Zm-709.489,-166.096c97.364,0 168.033,68.953 168.033,163.96c0,75.429 -54.71,142.972 -127.26,157.103c-18.473,3.604 -49.6,3.514 -49.6,3.514l-243.306,0l0,107.906c0,8.737 -6.588,15.325 -15.325,15.325c-8.737,0 -15.332,-6.588 -15.332,-15.325l0,-414.495c0,-10.259 7.729,-17.988 17.988,-17.988l264.8,0Zm-252.289,30.642l0.157,153.373l0,109.921l252.803,0c73.258,0 135.146,-59.829 135.146,-130.654c0,-73.139 -60.627,-132.639 -135.146,-132.639l-252.96,0Z" style="fill:currentColor;"/></g></svg>
+        </div>
+        <h3 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(20px,2.3vw,25px);letter-spacing:-.015em;margin-top:16px;">Plan B</h3>
+        <p style="font-size:14.5px;line-height:1.75;color:rgba(10,10,10,.5);margin-top:6px;">현장 시공·감리</p>
+      </div>
+      <div class="svc-card" style="border-radius:20px;padding:clamp(26px,3vw,36px);display:flex;flex-direction:column;background-color:#F5F2EE;">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span style="font-family:'Newsreader',Georgia,serif;font-style:italic;font-size:30px;color:#FF8282;line-height:1;">03</span>
+          <span style="font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;">Visualization</span>
+        </div>
+        <div style="height:72px;display:flex;align-items:center;gap:11px;margin-top:clamp(28px,4vw,44px);">
+          <svg style="width:36px;height:36px;display:block;" aria-hidden="true"><use href="#wayo-mark"/></svg>
+          <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:19px;letter-spacing:.16em;color:#0A0A0A;">WAYO</span>
+        </div>
+        <h3 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(20px,2.3vw,25px);letter-spacing:-.015em;margin-top:16px;">Wayo</h3>
+        <p style="font-size:14.5px;line-height:1.75;color:#B8B5A8;margin-top:6px;">AI 투시도·홍보 영상 시각화</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 4 · ARCHIVE ══════════ -->
+<section id="archive" style="scroll-margin-top:64px;overflow:hidden;">
+  <div style="max-width:1220px;margin:0 auto;padding:clamp(64px,9vw,130px) clamp(20px,5vw,72px) clamp(48px,7vw,88px);">
+    <p style="font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:#B8B5A8;">03 — Archive</p>
+    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 32px;margin-top:clamp(20px,3vw,32px);">
+      <div>
+        <h2 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(26px,3.4vw,40px);letter-spacing:-.02em;line-height:1.25;">완공 기록</h2>
+        <p style="font-size:14.5px;color:rgba(10,10,10,.5);margin-top:8px;max-width:44ch;">모든 완공 프로젝트는 아카이브 번호와 함께 원본 기록으로 공개됩니다.</p>
+      </div>
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="arw" id="arcPrev" aria-label="이전 기록" style="width:46px;height:46px;border-radius:999px;background:transparent;border:1px solid rgba(10,10,10,.18);color:#0A0A0A;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;">←</button>
+        <button class="arw" id="arcNext" aria-label="다음 기록" style="width:46px;height:46px;border-radius:999px;background:transparent;border:1px solid rgba(10,10,10,.18);color:#0A0A0A;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:18px;">→</button>
+      </div>
+    </div>
+    <div class="arc-scroll" id="arcScroll" style="display:flex;gap:clamp(16px,2vw,24px);margin-top:clamp(28px,4vw,48px);overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:4px;">
+      <a href="grandhill-case-study.html" aria-label="아카이브 PNB-2026-014 — 그랜드힐 컨벤션 본관 홀 기록 보기" style="flex:0 0 clamp(280px,78vw,720px);scroll-snap-align:start;text-decoration:none;color:#0A0A0A;">
+        <div style="aspect-ratio:16/9;background:#EDE8E1;border-radius:clamp(16px,2vw,24px);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:18px;">
+            <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(10,10,10,.4);">16:9 — Main</span>
+            <span style="font-size:12.5px;color:rgba(10,10,10,.4);">본관 홀 전경 · 실사진 추후 삽입</span>
+          </div>
+          <span style="position:absolute;top:clamp(16px,2vw,24px);left:clamp(16px,2vw,24px);font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.14em;color:#0A0A0A;background:rgba(245,242,238,.9);backdrop-filter:blur(6px);padding:8px 14px;border-radius:999px;">No. PNB-2026-014</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px 28px;padding:clamp(18px,2.5vw,26px) 4px 0;">
+          <h3 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(19px,2.4vw,26px);line-height:1.35;letter-spacing:-.015em;text-wrap:pretty;max-width:26ch;">그랜드힐 컨벤션 본관 홀 — 빛이 머무는 버진로드</h3>
+          <div style="display:flex;align-items:baseline;gap:22px;">
+            <span style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.06em;color:rgba(10,10,10,.5);">경기 성남 분당 · 2026.06</span>
+            <span style="font-family:'Inter',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#E96B6B;white-space:nowrap;">기록 보기 →</span>
+          </div>
+        </div>
+      </a>
+      <!-- 아래 두 카드는 예시(가상 프로젝트) — 실제 완공 기록으로 교체 예정 -->
+      <a href="#archive" aria-label="아카이브 예시 카드 — 준비 중" style="flex:0 0 clamp(280px,78vw,720px);scroll-snap-align:start;text-decoration:none;color:#0A0A0A;">
+        <div style="aspect-ratio:16/9;background:#EDE8E1;border-radius:clamp(16px,2vw,24px);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:18px;">
+            <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(10,10,10,.4);">16:9 — Main</span>
+            <span style="font-size:12.5px;color:rgba(10,10,10,.4);">채플 전경 · 실사진 추후 삽입</span>
+          </div>
+          <span style="position:absolute;top:clamp(16px,2vw,24px);left:clamp(16px,2vw,24px);font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.14em;color:#0A0A0A;background:rgba(245,242,238,.9);backdrop-filter:blur(6px);padding:8px 14px;border-radius:999px;">No. PNB-2026-0XX</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px 28px;padding:clamp(18px,2.5vw,26px) 4px 0;">
+          <h3 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(19px,2.4vw,26px);line-height:1.35;letter-spacing:-.015em;text-wrap:pretty;max-width:26ch;">루미에르 채플 — 흰 벽이 여는 예식</h3>
+          <div style="display:flex;align-items:baseline;gap:22px;">
+            <span style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.06em;color:rgba(10,10,10,.5);">기록 준비 중</span>
+            <span style="font-family:'Inter',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#B8B5A8;white-space:nowrap;">Coming Soon</span>
+          </div>
+        </div>
+      </a>
+      <a href="#archive" aria-label="아카이브 예시 카드 — 준비 중" style="flex:0 0 clamp(280px,78vw,720px);scroll-snap-align:start;text-decoration:none;color:#0A0A0A;">
+        <div style="aspect-ratio:16/9;background:#EDE8E1;border-radius:clamp(16px,2vw,24px);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative;">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:18px;">
+            <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(10,10,10,.4);">16:9 — Main</span>
+            <span style="font-size:12.5px;color:rgba(10,10,10,.4);">연회장 전경 · 실사진 추후 삽입</span>
+          </div>
+          <span style="position:absolute;top:clamp(16px,2vw,24px);left:clamp(16px,2vw,24px);font-family:'Inter',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.14em;color:#0A0A0A;background:rgba(245,242,238,.9);backdrop-filter:blur(6px);padding:8px 14px;border-radius:999px;">No. PNB-2025-0XX</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px 28px;padding:clamp(18px,2.5vw,26px) 4px 0;">
+          <h3 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(19px,2.4vw,26px);line-height:1.35;letter-spacing:-.015em;text-wrap:pretty;max-width:26ch;">베르디아 연회장 — 저녁으로 물드는 홀</h3>
+          <div style="display:flex;align-items:baseline;gap:22px;">
+            <span style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.06em;color:rgba(10,10,10,.5);">기록 준비 중</span>
+            <span style="font-family:'Inter',sans-serif;font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#B8B5A8;white-space:nowrap;">Coming Soon</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 5 · SIMULATOR (FAKE DOOR) ══════════ -->
+<section style="background:#0A0A0A;color:#F5F2EE;border-radius:clamp(20px,3vw,36px);margin:0 clamp(8px,1.2vw,16px);">
+  <div style="max-width:1220px;margin:0 auto;padding:clamp(64px,9vw,130px) clamp(20px,5vw,72px);">
+    <p style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.24em;text-transform:uppercase;color:#FF8282;">Coming Soon — Remodeling Simulator</p>
+    <div class="two-col" style="display:grid;grid-template-columns:1.2fr 1fr;gap:clamp(36px,5vw,80px);align-items:end;margin-top:clamp(24px,3vw,40px);">
+      <div>
+        <h2 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:800;font-size:clamp(30px,4.6vw,58px);line-height:1.14;letter-spacing:-.025em;text-wrap:balance;">우리 집 리모델링,<br>화면에서 <span style="color:#FF8282;">먼저 조합해</span> 보세요.</h2>
+        <p style="font-size:15px;line-height:1.85;color:#B8B5A8;margin-top:20px;max-width:44ch;">평형과 취향을 고르면 리모델링 구성과 투시도가 화면에 그려집니다. 사전 등록하면 오픈과 동시에 가장 먼저 초대해 드립니다.</p>
+        <a href="simulator.html" style="display:inline-flex;align-items:center;gap:10px;color:#F5F2EE;font-family:'Inter',sans-serif;font-size:12px;font-weight:500;letter-spacing:.14em;text-transform:uppercase;margin-top:24px;padding:4px 2px;text-decoration:none;border-bottom:1px solid rgba(245,242,238,.35);transition:border-color .2s;" onmouseover="this.style.borderColor='#FF8282'" onmouseout="this.style.borderColor='rgba(245,242,238,.35)'">지금 조합해보기 <span aria-hidden="true">→</span></a>
+      </div>
+      <form id="preregForm" style="display:flex;flex-direction:column;gap:24px;">
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;">Email · 이메일</span>
+          <input class="fld-d" type="email" required placeholder="you@example.com" style="background:rgba(245,242,238,.07);border:none;border-radius:12px;padding:14px 18px;font-size:15px;color:#F5F2EE;">
+        </label>
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;">Size · 평형</span>
+          <select class="fld-d" style="background:rgba(245,242,238,.07);border:none;border-radius:12px;padding:14px 18px;font-size:15px;color:#F5F2EE;appearance:auto;">
+            <option style="color:#0A0A0A;">20평대</option>
+            <option style="color:#0A0A0A;">30평대</option>
+            <option style="color:#0A0A0A;">40평대 이상</option>
+          </select>
+        </label>
+        <button class="btn-coral" type="submit" style="align-self:flex-start;background:#FF8282;color:#0A0A0A;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:16px 32px;border-radius:999px;white-space:nowrap;">먼저 써보기 →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ 6 · CONTACT ══════════ -->
+<section id="contact" style="scroll-margin-top:64px;">
+  <div style="max-width:1220px;margin:0 auto;padding:clamp(64px,9vw,130px) clamp(20px,5vw,72px);">
+    <p style="font-family:'Inter',sans-serif;font-size:11px;font-weight:500;letter-spacing:.24em;text-transform:uppercase;color:#B8B5A8;">04 — Contact</p>
+    <div class="two-col" style="display:grid;grid-template-columns:1fr 1.2fr;gap:clamp(36px,5vw,80px);margin-top:clamp(24px,3vw,40px);">
+      <div>
+        <h2 style="font-family:'Paperlogy','Pretendard',sans-serif;font-weight:600;font-size:clamp(24px,3vw,34px);line-height:1.35;letter-spacing:-.02em;text-wrap:balance;">공간에 담고 싶은 이야기가 있다면, 지금 들려주세요.</h2>
+        <div style="display:flex;flex-direction:column;gap:14px;margin-top:32px;">
+          <div style="display:flex;gap:16px;align-items:baseline;">
+            <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;width:92px;flex:none;">Email</span>
+            <a class="lnk" href="mailto:studio@wayo.kr" style="font-family:'Inter',sans-serif;font-size:14.5px;color:#0A0A0A;text-decoration:none;">studio@wayo.kr</a>
+          </div>
+          <div style="display:flex;gap:16px;align-items:baseline;">
+            <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;width:92px;flex:none;">Instagram</span>
+            <a class="lnk" href="https://instagram.com/wayo.studio" target="_blank" rel="noopener" style="font-family:'Inter',sans-serif;font-size:14.5px;color:#0A0A0A;text-decoration:none;">@wayo.studio</a>
+          </div>
+          <div style="display:flex;gap:16px;align-items:baseline;">
+            <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;width:92px;flex:none;">Web</span>
+            <a class="lnk" href="https://wayo.kr" target="_blank" rel="noopener" style="font-family:'Inter',sans-serif;font-size:14.5px;color:#0A0A0A;text-decoration:none;">wayo.kr</a>
+          </div>
+        </div>
+      </div>
+      <form id="contactForm" style="display:flex;flex-direction:column;gap:20px;">
+        <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+          <label style="display:flex;flex-direction:column;gap:8px;">
+            <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;">Email · 이메일</span>
+            <input class="fld" type="email" required placeholder="you@example.com" style="background:#EDE8E1;border:none;border-radius:12px;padding:14px 18px;font-size:15px;color:#0A0A0A;">
+          </label>
+          <label style="display:flex;flex-direction:column;gap:8px;">
+            <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;">어디서 보고 오셨나요?</span>
+            <select class="fld" style="background:#EDE8E1;border:none;border-radius:12px;padding:14px 18px;font-size:15px;color:#0A0A0A;appearance:auto;">
+              <option>인스타그램</option>
+              <option>검색</option>
+              <option>지인 소개</option>
+              <option>웨딩홀·업계 추천</option>
+              <option>기타</option>
+            </select>
+          </label>
+        </div>
+        <label style="display:flex;flex-direction:column;gap:8px;">
+          <span style="font-family:'Inter',sans-serif;font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#B8B5A8;">Message · 문의 내용</span>
+          <textarea class="fld" rows="5" required placeholder="공간의 위치, 규모, 원하시는 방향을 편하게 적어주세요." style="background:#EDE8E1;border:none;border-radius:12px;padding:14px 18px;font-size:15px;color:#0A0A0A;resize:vertical;font-family:'Pretendard',sans-serif;line-height:1.7;"></textarea>
+        </label>
+        <button class="btn-ink" type="submit" style="align-self:flex-start;background:#0A0A0A;color:#F5F2EE;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;padding:16px 32px;border-radius:999px;white-space:nowrap;">문의 보내기 →</button>
+      </form>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ══════════ FOOTER ══════════ -->
+<footer style="max-width:1220px;margin:0 auto;padding:0 clamp(20px,5vw,72px) clamp(36px,5vw,56px);">
+  <div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px 36px;border-top:1px solid rgba(10,10,10,.12);padding-top:26px;">
+    <span style="display:flex;align-items:center;gap:9px;">
+      <svg style="width:16px;height:16px;display:block;" aria-hidden="true"><use href="#wayo-mark"/></svg>
+      <span style="font-family:'Newsreader',Georgia,serif;font-style:italic;font-size:14px;color:#B8B5A8;">Spaces that speak <span style="color:#FF8282;">your way.</span></span>
+    </span>
+    <span style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.1em;color:#B8B5A8;">© 2026 Wayo Studio · Plan and B · Plan B</span>
+  </div>
+</footer>
+
+<!-- toast -->
+<div id="toast" role="status" style="display:none;position:fixed;left:50%;bottom:28px;transform:translateX(-50%);z-index:100;background:#0A0A0A;color:#F5F2EE;padding:15px 26px;border-radius:999px;font-size:14px;line-height:1.6;box-shadow:0 10px 32px rgba(10,10,10,.3);max-width:min(90vw,440px);animation:toastRise .35s cubic-bezier(.2,.7,.2,1) both;"></div>
+
+<script>
+(function(){
+  // 모바일 메뉴
+  var burger=document.getElementById('burger'), mnav=document.getElementById('mnav');
+  burger.addEventListener('click',function(){
+    var open=mnav.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open?'true':'false');
+  });
+  mnav.querySelectorAll('a').forEach(function(a){
+    a.addEventListener('click',function(){mnav.classList.remove('open');burger.setAttribute('aria-expanded','false');});
+  });
+
+  // 아카이브 가로 스크롤
+  var arc=document.getElementById('arcScroll');
+  function by(dir){arc.scrollBy({left:dir*Math.round(arc.clientWidth*0.82),behavior:'smooth'});}
+  document.getElementById('arcPrev').addEventListener('click',function(){by(-1);});
+  document.getElementById('arcNext').addEventListener('click',function(){by(1);});
+
+  // 토스트
+  var toast=document.getElementById('toast'), tt=null;
+  function showToast(msg){
+    if(tt)clearTimeout(tt);
+    toast.textContent=msg;toast.style.display='block';
+    tt=setTimeout(function(){toast.style.display='none';},3800);
+  }
+
+  // 폼 (전송 없음 — 확인 토스트만)
+  document.getElementById('preregForm').addEventListener('submit',function(e){
+    e.preventDefault();e.target.reset();
+    showToast('사전 등록이 완료되었습니다. 시뮬레이터 오픈 시 가장 먼저 초대해 드릴게요.');
+  });
+  document.getElementById('contactForm').addEventListener('submit',function(e){
+    e.preventDefault();e.target.reset();
+    showToast('문의가 접수되었습니다. 확인 후 studio@wayo.kr에서 회신드리겠습니다.');
+  });
+})();
+</script>
+</body>
+</html>

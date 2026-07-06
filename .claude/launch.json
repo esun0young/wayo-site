@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "wayo-site",
+      "runtimeExecutable": "ruby",
+      "runtimeArgs": ["-run", "-e", "httpd", "/private/tmp/claude-501/-Users-sun-Documents-02-Work-06-----/aa487d84-5d4d-4ce0-a0b4-e8a0787d501e/scratchpad/site", "-p", "8137"],
+      "port": 8137
+    }
+  ]
+}
