@@ -238,7 +238,7 @@ function parseCSV(text){
 function applySheet(rows){
   if(!rows.length) return;
   const head=rows[0].map(h=>h.trim().toLowerCase());
-  const col={ category:head.indexOf('category'), key:head.indexOf('key'), label:head.indexOf('label'), price:head.indexOf('price'), color:head.indexOf('color'), option:head.indexOf('option') };
+  const col={ category:head.indexOf('category'), key:head.indexOf('key'), label:head.indexOf('label'), price:head.indexOf('price'), color:head.indexOf('color'), option:head.indexOf('option'), image:head.indexOf('image') };
   if(col.category<0||col.key<0) return;
   const cell=(r,i)=>(i>=0&&r[i]!=null?String(r[i]).trim():'');
   rows.slice(1).forEach(r=>{
@@ -252,6 +252,7 @@ function applySheet(rows){
     const color=cell(r,col.color); if(color) e.color=color;
     const opt=cell(r,col.option);
     if(opt){ e.opt = (cat==='tile') ? (parseFloat(opt)||e.opt) : opt; }
+    const img=cell(r,col.image); if(img) e.image=img;
   });
 }
 
@@ -473,10 +474,19 @@ function draw(){
 }
 
 /* ═══════════════ 6. 옵션 패널 ═══════════════ */
+// image 값이 있으면 실물 사진을 스와치 배경으로 사용
+// 파일명만 적으면 assets/materials/ 폴더에서 찾고, 전체 URL도 허용
+function matImage(e){
+  if(!e.image) return null;
+  const src=/^(https?:)?\//i.test(e.image) ? e.image : 'assets/materials/'+e.image;
+  return `url('${src.replace(/'/g,"%27")}') center/cover no-repeat`;
+}
+
 function swatchBg(opt,val){
   const cat = opt==='mixPublic'?'paint' : opt==='mixPrivate'?'paper' : opt;
   const e=(DATA[cat]||{})[val]||{};
   const c=e.color||'#ddd';
+  const im=matImage(e); if(im) return `${im} ${c}`; // 사진 로드 실패 시 색상 폴백
   if(opt==='floor') return e.opt==='wood' ? `repeating-linear-gradient(90deg,${c} 0 5px,${dark(c,0.08)} 5px 6px)` : c;
   if(opt==='tile') return `repeating-linear-gradient(0deg,${c} 0 8px,${dark(c,0.07)} 8px 9px),repeating-linear-gradient(90deg,${c} 0 8px,${dark(c,0.07)} 8px 9px)`;
   if(opt==='artwall'){

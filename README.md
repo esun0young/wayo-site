@@ -43,6 +43,13 @@ python3 -m http.server 8000
 | `price` | 가격(만원). `config` 행에서는 기본 공사비·배율 값 |
 | `color` | 스와치/3D 뷰 색상 (예: `#C99A66`) |
 | `option` | `floor`: `wood`면 나뭇결 표현 / `tile`: 타일 한 변 크기(m) |
+| `image` | 마감재 실물 사진 파일명 (예: `oak.jpg`). 비어 있으면 `color`로 표시 |
+
+### 마감재 실물 사진 올리기
+
+1. GitHub 저장소의 `assets/materials` 폴더에서 **Add file → Upload files**로 사진 업로드 (규격: 가로 600px 내외 JPG, 300KB 이하)
+2. 구글 시트의 `image` 열에 파일명 입력 — 예: `oak.jpg`
+3. 사진이 있으면 스와치에 실물 사진이, 없으면 `color` 색상이 표시됩니다. **3D 뷰어는 항상 `color`로 칠해지므로** 사진을 올려도 대표색을 함께 적어주세요.
 
 ### 운영 시 알아둘 것
 
