@@ -31,6 +31,13 @@
   input[type=range]::-moz-range-thumb{width:15px;height:15px;border:none;border-radius:50%;background:#0A0A0A;cursor:pointer;}
   .pill-btn{font-family:'Inter','Pretendard',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.16em;text-transform:uppercase;background:rgba(245,242,238,.85);backdrop-filter:blur(6px);border:none;cursor:pointer;color:rgba(10,10,10,.7);padding:9px 13px;border-radius:999px;}
   #toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:200;background:#0A0A0A;color:#F5F2EE;padding:16px 24px;border-radius:16px;font-size:13.5px;line-height:1.6;box-shadow:0 12px 36px rgba(10,10,10,.32);max-width:min(92vw,460px);animation:toastRise .35s cubic-bezier(.2,.7,.2,1) both;border-left:3px solid #FF8282;display:none;}
+  /* 견적 요약 인쇄 — 브라우저의 'PDF로 저장'을 사용 */
+  #printSheet{display:none;}
+  @media print{
+    body{padding-top:0;background:#fff;}
+    body>*{display:none !important;}
+    body>#printSheet{display:block !important;-webkit-print-color-adjust:exact;print-color-adjust:exact;}
+  }
   @media (prefers-reduced-motion:reduce){*{animation:none !important;transition:none !important;}}
 </style>
 </head>
@@ -168,6 +175,11 @@
         <input type="email" required placeholder="you@example.com" style="flex:1 1 200px;min-width:0;background:rgba(245,242,238,.08);border:none;border-radius:12px;padding:15px 18px;font-size:15px;color:#F5F2EE;outline:none;">
         <button type="submit" style="flex:0 0 auto;background:#FF8282;color:#0A0A0A;border:none;cursor:pointer;font-family:'Inter',sans-serif;font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:15px 26px;border-radius:12px;white-space:nowrap;">이 조합으로 상담 신청 →</button>
       </form>
+      <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:14px;">
+        <button type="button" id="copyLinkBtn" style="background:none;border:1px solid rgba(245,242,238,.28);color:#F5F2EE;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:12px 18px;border-radius:12px;white-space:nowrap;">내 조합 링크 복사 ⧉</button>
+        <button type="button" id="printBtn" style="background:none;border:1px solid rgba(245,242,238,.28);color:#F5F2EE;cursor:pointer;font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:12px 18px;border-radius:12px;white-space:nowrap;">견적서 PDF 저장 🖨</button>
+      </div>
+      <p style="font-size:11px;line-height:1.6;color:rgba(245,242,238,.4);margin-top:12px;">링크를 열면 이 조합이 그대로 복원됩니다 · PDF는 브라우저의 "PDF로 저장"으로 내려받습니다</p>
     </div>
 
   </div>
@@ -175,6 +187,9 @@
 
 <!-- toast -->
 <div id="toast" role="status"></div>
+
+<!-- 견적 요약 — 인쇄 시에만 표시 (내용은 printBtn 클릭 시 JS로 채움) -->
+<div id="printSheet"></div>
 
 <script>
 "use strict";
@@ -283,6 +298,7 @@ async function loadSheet(){
     applySheet(parseCSV(await res.text()));
     console.info('[Wayo] 구글 시트 가격표를 적용했습니다.');
     rerender();
+    applyShareParams(); // 시트에서 추가된 재료 key가 링크에 담겨 있을 수 있어 재시도
   }catch(err){
     console.warn('[Wayo] 시트를 불러오지 못해 기본 가격표를 사용합니다:', err.message);
   }
@@ -603,6 +619,106 @@ function showToast(msg){
   toastTimer=setTimeout(()=>{ el.style.display='none'; },5200);
 }
 
+/* ═══════════════ 8-B. 조합 공유 링크 ═══════════════
+   선택 조합을 URL 쿼리에 담는다. 링크를 열면 같은 조합이 복원되므로
+   고객은 링크만 보관하면 되고, 디자이너도 클릭 한 번으로 조합을 재현한다. */
+const SHARE_KEYS={ floor:'floor', wall:'wallMode', paint:'paint', paper:'paper',
+  mpub:'mixPublic', mpri:'mixPrivate', art:'artwall', tile:'tile', mold:'molding', light:'light' };
+const SHARE_CATS={ floor:'floor', wallMode:'wall', paint:'paint', paper:'paper',
+  mixPublic:'paint', mixPrivate:'paper', artwall:'artwall', tile:'tile', molding:'molding', light:'light' };
+
+function shareURL(){
+  const u=new URL(location.origin+location.pathname);
+  Object.entries(SHARE_KEYS).forEach(([param,key])=>u.searchParams.set(param,state[key]));
+  return u.toString();
+}
+
+// URL 파라미터 → 상태 복원. 시트에서 추가된 재료 key도 있을 수 있어
+// 시트 로드 후에도 한 번 더 호출된다. 존재하지 않는 key는 무시(기본값 유지).
+function applyShareParams(){
+  const q=new URLSearchParams(location.search);
+  let applied=0;
+  Object.entries(SHARE_KEYS).forEach(([param,key])=>{
+    const v=q.get(param); if(!v) return;
+    const cat=SHARE_CATS[key];
+    if(DATA[cat]&&DATA[cat][v]&&state[key]!==v){ state[key]=v; applied++; }
+  });
+  if(applied) rerender();
+  return applied;
+}
+
+async function copyShareLink(){
+  const url=shareURL();
+  try{
+    await navigator.clipboard.writeText(url);
+    showToast('내 조합 링크가 복사되었습니다. 메모장이나 메신저에 붙여넣어 보관하세요.');
+  }catch(e){
+    window.prompt('아래 링크를 직접 복사하세요 (Ctrl/Cmd+C)', url);
+  }
+}
+$('copyLinkBtn').addEventListener('click',copyShareLink);
+
+/* ═══════════════ 8-C. 견적 요약 인쇄 (PDF 저장) ═══════════════ */
+function buildPrintSheet(){
+  const s=state; const {lo,hi}=calcPrice();
+  const p=(cat,key)=>((DATA[cat][key]||{}).price)||0;
+  const sw=(cat,key)=>`<span style="display:inline-block;width:13px;height:13px;border-radius:4px;background:${clr(cat,key)};border:1px solid rgba(0,0,0,.18);vertical-align:-2px;margin-right:7px;"></span>`;
+
+  let wallSel;
+  if(s.wallMode==='paint') wallSel=sw('paint',s.paint)+lab('paint',s.paint);
+  else if(s.wallMode==='paper') wallSel=sw('paper',s.paper)+lab('paper',s.paper);
+  else wallSel=`거실·주방 ${sw('paint',s.mixPublic)}${lab('paint',s.mixPublic)} &nbsp;·&nbsp; 침실 ${sw('paper',s.mixPrivate)}${lab('paper',s.mixPrivate)}`;
+
+  const rows=[
+    ['바닥',       sw('floor',s.floor)+lab('floor',s.floor),                              p('floor',s.floor)],
+    ['벽 마감',    `${lab('wall',s.wallMode)} — ${wallSel}`,                              p('wall',s.wallMode)],
+    ['거실 아트월',(s.artwall!=='paint'?sw('artwall',s.artwall):'')+lab('artwall',s.artwall), p('artwall',s.artwall)],
+    ['타일',       sw('tile',s.tile)+lab('tile',s.tile),                                  p('tile',s.tile)],
+    ['몰딩',       lab('molding',s.molding),                                              p('molding',s.molding)],
+    ['조명 톤',    lab('light',s.light),                                                  null]
+  ];
+  const tr=(name,desc,price)=>`<tr>
+    <td style="padding:9px 0;border-bottom:1px solid #E5E0D8;font-size:12px;color:#8A867E;white-space:nowrap;padding-right:24px;">${name}</td>
+    <td style="padding:9px 0;border-bottom:1px solid #E5E0D8;font-size:13px;">${desc}</td>
+    <td style="padding:9px 0;border-bottom:1px solid #E5E0D8;font-size:13px;text-align:right;white-space:nowrap;">${price==null?'—':'+'+comma(price)+'만원'}</td>
+  </tr>`;
+
+  const today=new Date().toLocaleDateString('ko-KR',{year:'numeric',month:'long',day:'numeric'});
+  $('printSheet').innerHTML=`
+  <div style="max-width:640px;margin:0 auto;padding:48px 24px;font-family:'Pretendard',sans-serif;color:#0A0A0A;">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;border-bottom:2px solid #0A0A0A;padding-bottom:14px;">
+      <div>
+        <p style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#FF8282;">Wayo · Remodeling Simulator</p>
+        <h1 style="font-size:22px;font-weight:800;letter-spacing:-.02em;margin-top:6px;">리모델링 견적 요약 (예상)</h1>
+      </div>
+      <p style="font-size:12px;color:#8A867E;">${today}</p>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;margin-top:22px;">
+      ${rows.map(r=>tr(r[0],r[1],r[2])).join('')}
+      <tr>
+        <td style="padding:9px 0;font-size:12px;color:#8A867E;padding-right:24px;">기본 공사비</td>
+        <td></td>
+        <td style="padding:9px 0;font-size:13px;text-align:right;white-space:nowrap;">${comma(CONFIG.base)}만원</td>
+      </tr>
+    </table>
+
+    <div style="margin-top:20px;background:#F5F2EE;border-radius:14px;padding:18px 22px;display:flex;align-items:baseline;justify-content:space-between;gap:16px;">
+      <span style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:#8A867E;">Estimated · 예상 공사비</span>
+      <strong style="font-size:20px;font-weight:800;letter-spacing:-.01em;">${comma(lo)}만원 ~ ${comma(hi)}만원</strong>
+    </div>
+
+    <p style="font-size:11px;line-height:1.7;color:#8A867E;margin-top:16px;">구 26평형 / 전용 53㎡ 예시 평면 기준의 개략 범위입니다. 실측과 자재 확정 후 정확한 견적을 드립니다.</p>
+
+    <div style="margin-top:26px;border-top:1px solid #E5E0D8;padding-top:14px;">
+      <p style="font-size:11px;color:#8A867E;">이 조합 다시 열기</p>
+      <p style="font-size:10.5px;color:#0A0A0A;word-break:break-all;margin-top:4px;">${shareURL()}</p>
+      <p style="font-size:11px;color:#8A867E;margin-top:12px;">Wayo Studio · studio@wayo.kr</p>
+    </div>
+  </div>`;
+}
+$('printBtn').addEventListener('click',()=>{ buildPrintSheet(); window.print(); });
+
 /* ═══════════════ 9. 이벤트 연결 ═══════════════ */
 panelMount.addEventListener('click',(e)=>{
   const b=e.target.closest('[data-opt]'); if(!b) return;
@@ -822,6 +938,7 @@ $('planRemoveBtn').addEventListener('click',()=>{ state.hasPlan=false; state.vie
 
 /* ═══════════════ 12. 시작 ═══════════════ */
 rerender();
+applyShareParams(); // 공유 링크로 들어온 경우 조합 복원
 syncViewUI();
 loadSheet();
 </script>
