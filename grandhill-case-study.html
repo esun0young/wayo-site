@@ -24,6 +24,11 @@ html, body { margin: 0; padding: 0; background: #F5F2EE; }
 #ba { --pos: 50%; }
 #ba .ba-before { clip-path: inset(0 calc(100% - var(--pos)) 0 0); }
 #ba .ba-handle { left: var(--pos); }
+/* 공통 사이트 헤더 */
+.nav-burger{display:none;}
+#mnav{display:none;background:rgba(245,242,238,.97);flex-direction:column;padding:8px 0 16px;}
+#mnav.open{display:flex;}
+@media (max-width:840px){.nav-links{display:none !important;}.nav-burger{display:inline-flex !important;}}
 </style>
 <script type="application/ld+json">
 {
@@ -46,12 +51,47 @@ html, body { margin: 0; padding: 0; background: #F5F2EE; }
 </head>
 <body>
 
-<div style="font-family: Pretendard, 'Pretendard Variable', sans-serif; color: #0A0A0A; background: #F5F2EE; min-height: 100vh; -webkit-font-smoothing: antialiased; word-break: keep-all;">
+<!-- Wayo 원형 마크 — 1회 정의 후 재사용 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wayo-mark" viewBox="0 0 1024 1024">
+    <rect width="1024" height="1024" rx="512" fill="#FF8282"/>
+    <path d="M175.975 673.26C184.591 667.178 195.291 664.753 205.859 666.422C216.419 668.098 225.982 673.729 232.305 682.176C233.84 684.088 236.671 687.069 239.819 689.844C306.817 744.709 435.015 772.707 492.779 726.788C496.041 724.322 499.043 721.73 501.971 718.868C511.791 709.522 524.833 704.581 538.371 705.298C551.899 706.006 564.816 712.313 574.135 722.666C583.453 733.02 588.367 746.528 587.651 760.056C586.942 773.594 580.662 786.043 570.337 794.828C563.931 800.361 557.356 805.339 550.345 809.986C412.588 885.662 282.527 832.289 182.385 749.456C176.837 743.865 170.898 737.233 165.513 729.324C159.67 720.538 157.565 709.642 159.523 699.13C161.489 688.613 167.358 679.343 175.975 673.26Z" fill="white"/>
+    <path d="M273.555 253.127C287.989 245.604 305.612 244.374 322.021 249.541C338.43 254.708 352.13 265.804 359.579 280.218C367.059 294.642 367.678 311.204 361.827 326.428C360.775 329.172 359.723 331.918 358.671 334.662C339.731 384.058 320.789 433.454 301.849 482.851C300.797 485.595 299.746 488.34 298.693 491.085C294.092 503.055 284.61 512.938 272.746 518.691C260.857 524.436 247.559 525.58 235.364 521.739C223.169 517.899 212.956 509.352 206.559 497.849C200.186 486.353 198.152 472.841 201.317 460.417C202.044 457.571 202.771 454.725 203.499 451.879C216.596 400.642 229.695 349.405 242.792 298.168C243.52 295.322 244.247 292.476 244.974 289.63C248.999 273.831 259.091 260.64 273.555 253.127Z" fill="white"/>
+    <path d="M498.955 274.746C513.241 266.942 530.766 265.344 547.194 270.164C563.622 274.984 577.468 285.784 585.202 300.048C592.964 314.321 593.979 330.888 588.508 346.246C587.43 349.28 586.352 352.315 585.274 355.349C565.868 409.96 546.46 464.571 527.053 519.182C525.975 522.216 524.897 525.251 523.819 528.285C519.495 540.423 510.243 550.567 498.479 556.596C486.693 562.618 473.359 564.032 461.031 560.415C448.702 556.798 438.277 548.413 431.669 536.995C425.082 525.583 422.852 512.069 425.85 499.542C426.602 496.413 427.352 493.282 428.104 490.153C441.633 433.817 455.162 377.482 468.69 321.146C469.442 318.016 470.194 314.886 470.946 311.757C474.74 295.906 484.642 282.542 498.955 274.746Z" fill="white"/>
+  </symbol>
+</svg>
+
+<!-- ══════════ NAV ══════════ -->
+<header style="position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(245,242,238,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);">
+  <div style="max-width:1220px;margin:0 auto;padding:0 clamp(20px,5vw,72px);height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+    <a href="index.html" style="display:flex;align-items:center;gap:9px;text-decoration:none;color:#0A0A0A;">
+      <svg style="width:20px;height:20px;display:block;" aria-hidden="true"><use href="#wayo-mark"/></svg>
+      <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:13px;letter-spacing:.22em;">WAYO</span>
+    </a>
+    <nav class="nav-links" style="display:flex;align-items:center;gap:clamp(20px,3vw,36px);">
+      <a class="nvl" href="index.html#about" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">About</a>
+      <a class="nvl" href="index.html#services" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">Services</a>
+      <a class="nvl" href="index.html#archive" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">Archive</a>
+      <a class="nvl" href="index.html#contact" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">Contact</a>
+    </nav>
+    <button class="nav-burger" id="burger" aria-label="메뉴 열기" aria-expanded="false" style="align-items:center;justify-content:center;flex-direction:column;gap:5px;width:44px;height:44px;background:none;border:none;cursor:pointer;margin-right:-10px;">
+      <span style="display:block;width:20px;height:1.5px;background:#0A0A0A;"></span>
+      <span style="display:block;width:20px;height:1.5px;background:#0A0A0A;"></span>
+    </button>
+  </div>
+  <nav id="mnav">
+    <a href="index.html#about" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#0A0A0A;text-decoration:none;padding:15px clamp(20px,5vw,72px);">About</a>
+    <a href="index.html#services" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#0A0A0A;text-decoration:none;padding:15px clamp(20px,5vw,72px);">Services</a>
+    <a href="index.html#archive" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#0A0A0A;text-decoration:none;padding:15px clamp(20px,5vw,72px);">Archive</a>
+    <a href="index.html#contact" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#E96B6B;text-decoration:none;padding:15px clamp(20px,5vw,72px);">Contact</a>
+  </nav>
+</header>
+
+<div style="font-family: Pretendard, 'Pretendard Variable', sans-serif; color: #0A0A0A; background: #F5F2EE; min-height: 100vh; -webkit-font-smoothing: antialiased; word-break: keep-all; padding-top: 64px;">
 
   <!-- 1. 원본 증명 영역 -->
   <header style="border-bottom: 1px solid #0A0A0A; padding: clamp(20px, 3vw, 32px) clamp(20px, 5vw, 72px); display: flex; flex-wrap: wrap; align-items: baseline; gap: 12px 40px;">
     <div style="display: flex; align-items: baseline; gap: 14px; margin-right: auto;">
-      <a href="index.html#archive" style="font-family: Inter, sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.18em; text-transform: uppercase; color: #B8B5A8; text-decoration: none;">← Wayo</a>
       <span style="font-family: Inter, sans-serif; font-size: clamp(15px, 1.4vw, 18px); font-weight: 600; letter-spacing: 0.08em;">PNB-2026-014</span>
       <span style="display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: #FF8282; transform: translateY(-1px);"></span>
       <span style="font-family: Inter, sans-serif; font-size: 11px; font-weight: 500; letter-spacing: 0.22em; text-transform: uppercase; color: #B8B5A8;">Original Design Record</span>
@@ -217,6 +257,18 @@ html, body { margin: 0; padding: 0; background: #F5F2EE; }
   ba.addEventListener('pointermove', function (e) { if (dragging) setPos(e.clientX); });
   ba.addEventListener('pointerup', function () { dragging = false; });
   ba.addEventListener('pointercancel', function () { dragging = false; });
+})();
+
+// 모바일 메뉴
+(function () {
+  var burger = document.getElementById('burger'), mnav = document.getElementById('mnav');
+  burger.addEventListener('click', function () {
+    var open = mnav.classList.toggle('open');
+    burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  mnav.querySelectorAll('a').forEach(function (a) {
+    a.addEventListener('click', function () { mnav.classList.remove('open'); burger.setAttribute('aria-expanded', 'false'); });
+  });
 })();
 </script>
 </body>

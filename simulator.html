@@ -12,15 +12,19 @@
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap">
 <style>
   *{margin:0;padding:0;box-sizing:border-box;}
-  body{background:#F5F2EE;color:#0A0A0A;font-family:'Pretendard',sans-serif;-webkit-font-smoothing:antialiased;word-break:keep-all;line-height:1.7;}
+  body{background:#F5F2EE;color:#0A0A0A;font-family:'Pretendard',sans-serif;-webkit-font-smoothing:antialiased;word-break:keep-all;line-height:1.7;padding-top:64px;}
   ::selection{background:#FF8282;color:#fff;}
   input,button{font:inherit;color:inherit;}
   @keyframes toastRise{from{opacity:0;transform:translateX(-50%) translateY(16px);}to{opacity:1;transform:translateX(-50%);}}
+  .nav-burger{display:none;}
+  #mnav{display:none;background:rgba(245,242,238,.97);flex-direction:column;padding:8px 0 16px;}
+  #mnav.open{display:flex;}
+  @media (max-width:840px){.nav-links{display:none !important;}.nav-burger{display:inline-flex !important;}}
   .sim-grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);}
-  .viewer-col{position:sticky;top:0;align-self:start;height:100vh;}
+  .viewer-col{position:sticky;top:64px;align-self:start;height:calc(100vh - 64px);}
   @media (max-width:900px){
     .sim-grid{grid-template-columns:1fr;}
-    .viewer-col{position:sticky;top:0;height:auto;z-index:20;}
+    .viewer-col{position:sticky;top:64px;height:auto;z-index:20;}
   }
   input[type=range]{-webkit-appearance:none;appearance:none;height:2px;background:rgba(10,10,10,.18);border-radius:2px;outline:none;}
   input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:15px;height:15px;border-radius:50%;background:#0A0A0A;cursor:pointer;}
@@ -32,14 +36,49 @@
 </head>
 <body>
 
-<div class="sim-grid" style="min-height:100vh;background:#F5F2EE;">
+<!-- Wayo 원형 마크 — 1회 정의 후 재사용 -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="wayo-mark" viewBox="0 0 1024 1024">
+    <rect width="1024" height="1024" rx="512" fill="#FF8282"/>
+    <path d="M175.975 673.26C184.591 667.178 195.291 664.753 205.859 666.422C216.419 668.098 225.982 673.729 232.305 682.176C233.84 684.088 236.671 687.069 239.819 689.844C306.817 744.709 435.015 772.707 492.779 726.788C496.041 724.322 499.043 721.73 501.971 718.868C511.791 709.522 524.833 704.581 538.371 705.298C551.899 706.006 564.816 712.313 574.135 722.666C583.453 733.02 588.367 746.528 587.651 760.056C586.942 773.594 580.662 786.043 570.337 794.828C563.931 800.361 557.356 805.339 550.345 809.986C412.588 885.662 282.527 832.289 182.385 749.456C176.837 743.865 170.898 737.233 165.513 729.324C159.67 720.538 157.565 709.642 159.523 699.13C161.489 688.613 167.358 679.343 175.975 673.26Z" fill="white"/>
+    <path d="M273.555 253.127C287.989 245.604 305.612 244.374 322.021 249.541C338.43 254.708 352.13 265.804 359.579 280.218C367.059 294.642 367.678 311.204 361.827 326.428C360.775 329.172 359.723 331.918 358.671 334.662C339.731 384.058 320.789 433.454 301.849 482.851C300.797 485.595 299.746 488.34 298.693 491.085C294.092 503.055 284.61 512.938 272.746 518.691C260.857 524.436 247.559 525.58 235.364 521.739C223.169 517.899 212.956 509.352 206.559 497.849C200.186 486.353 198.152 472.841 201.317 460.417C202.044 457.571 202.771 454.725 203.499 451.879C216.596 400.642 229.695 349.405 242.792 298.168C243.52 295.322 244.247 292.476 244.974 289.63C248.999 273.831 259.091 260.64 273.555 253.127Z" fill="white"/>
+    <path d="M498.955 274.746C513.241 266.942 530.766 265.344 547.194 270.164C563.622 274.984 577.468 285.784 585.202 300.048C592.964 314.321 593.979 330.888 588.508 346.246C587.43 349.28 586.352 352.315 585.274 355.349C565.868 409.96 546.46 464.571 527.053 519.182C525.975 522.216 524.897 525.251 523.819 528.285C519.495 540.423 510.243 550.567 498.479 556.596C486.693 562.618 473.359 564.032 461.031 560.415C448.702 556.798 438.277 548.413 431.669 536.995C425.082 525.583 422.852 512.069 425.85 499.542C426.602 496.413 427.352 493.282 428.104 490.153C441.633 433.817 455.162 377.482 468.69 321.146C469.442 318.016 470.194 314.886 470.946 311.757C474.74 295.906 484.642 282.542 498.955 274.746Z" fill="white"/>
+  </symbol>
+</svg>
+
+<!-- ══════════ NAV ══════════ -->
+<header style="position:fixed;top:0;left:0;right:0;z-index:60;background:rgba(245,242,238,.88);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);">
+  <div style="max-width:1220px;margin:0 auto;padding:0 clamp(20px,5vw,72px);height:64px;display:flex;align-items:center;justify-content:space-between;gap:16px;">
+    <a href="index.html" style="display:flex;align-items:center;gap:9px;text-decoration:none;color:#0A0A0A;">
+      <svg style="width:20px;height:20px;display:block;" aria-hidden="true"><use href="#wayo-mark"/></svg>
+      <span style="font-family:'Inter',sans-serif;font-weight:600;font-size:13px;letter-spacing:.22em;">WAYO</span>
+    </a>
+    <nav class="nav-links" style="display:flex;align-items:center;gap:clamp(20px,3vw,36px);">
+      <a class="nvl" href="index.html#about" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">About</a>
+      <a class="nvl" href="index.html#services" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">Services</a>
+      <a class="nvl" href="index.html#archive" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">Archive</a>
+      <a class="nvl" href="index.html#contact" style="font-family:'Inter',sans-serif;font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:rgba(10,10,10,.6);text-decoration:none;">Contact</a>
+    </nav>
+    <button class="nav-burger" id="burger" aria-label="메뉴 열기" aria-expanded="false" style="align-items:center;justify-content:center;flex-direction:column;gap:5px;width:44px;height:44px;background:none;border:none;cursor:pointer;margin-right:-10px;">
+      <span style="display:block;width:20px;height:1.5px;background:#0A0A0A;"></span>
+      <span style="display:block;width:20px;height:1.5px;background:#0A0A0A;"></span>
+    </button>
+  </div>
+  <nav id="mnav">
+    <a href="index.html#about" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#0A0A0A;text-decoration:none;padding:15px clamp(20px,5vw,72px);">About</a>
+    <a href="index.html#services" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#0A0A0A;text-decoration:none;padding:15px clamp(20px,5vw,72px);">Services</a>
+    <a href="index.html#archive" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#0A0A0A;text-decoration:none;padding:15px clamp(20px,5vw,72px);">Archive</a>
+    <a href="index.html#contact" style="font-family:'Inter',sans-serif;font-size:12px;letter-spacing:.18em;text-transform:uppercase;color:#E96B6B;text-decoration:none;padding:15px clamp(20px,5vw,72px);">Contact</a>
+  </nav>
+</header>
+
+<div class="sim-grid" style="min-height:calc(100vh - 64px);background:#F5F2EE;">
 
   <!-- ═══ VIEWER ═══ -->
   <div class="viewer-col" style="background:linear-gradient(180deg,#EDE8E1 0%,#E6E0D6 100%);display:flex;flex-direction:column;">
     <div style="flex:1;position:relative;display:flex;flex-direction:column;min-height:clamp(340px,52vh,760px);">
       <!-- badge -->
       <div style="position:absolute;top:clamp(16px,2.4vw,28px);left:clamp(16px,2.4vw,28px);z-index:3;max-width:60%;">
-        <a href="index.html" style="display:inline-block;font-family:'Inter',sans-serif;font-size:9.5px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:rgba(10,10,10,.55);text-decoration:none;margin-bottom:8px;">← Wayo 홈</a>
         <p style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:#FF8282;">Wayo · Remodeling Simulator</p>
         <p id="badgeSub" style="font-family:'Pretendard',sans-serif;font-size:12.5px;line-height:1.55;color:rgba(10,10,10,.62);margin-top:7px;">구 26평형 / 전용 53㎡<br>101동 304호 예시 평면</p>
       </div>
@@ -48,9 +87,9 @@
       <div id="svgMount" style="flex:1;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:pan-y;"></div>
 
       <!-- uploaded floor plan view (수준 A: 참고용 이미지 표시, 파일은 브라우저 밖으로 나가지 않음) -->
-      <div id="planView" style="position:absolute;inset:0;z-index:1;display:none;background:linear-gradient(180deg,#EDE8E1 0%,#E6E0D6 100%);padding:clamp(64px,10vh,100px) clamp(16px,2.4vw,28px) clamp(150px,24vh,210px);">
-        <img id="planImg" alt="업로드한 도면" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 24px rgba(10,10,10,.14));">
-        <p style="position:absolute;left:50%;transform:translateX(-50%);top:clamp(18px,2.6vw,30px);font-size:11px;color:rgba(10,10,10,.45);background:rgba(245,242,238,.8);backdrop-filter:blur(6px);padding:6px 14px;border-radius:999px;white-space:nowrap;">내 도면 (참고용) · 파일은 이 브라우저에서만 사용됩니다</p>
+      <div id="planView" style="position:absolute;inset:0;z-index:1;display:none;overflow:hidden;background:linear-gradient(180deg,#EDE8E1 0%,#E6E0D6 100%);padding:clamp(64px,10vh,100px) clamp(16px,2.4vw,28px) clamp(150px,24vh,210px);">
+        <img id="planImg" alt="업로드한 도면" draggable="false" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 24px rgba(10,10,10,.14));user-select:none;-webkit-user-drag:none;transform-origin:center center;will-change:transform;">
+        <p style="position:absolute;left:50%;transform:translateX(-50%);top:clamp(18px,2.6vw,30px);font-size:11px;color:rgba(10,10,10,.45);background:rgba(245,242,238,.8);backdrop-filter:blur(6px);padding:6px 14px;border-radius:999px;white-space:nowrap;">내 도면 (참고용) · ＋/−로 확대, 드래그로 이동 · 파일은 이 브라우저에서만 사용됩니다</p>
       </div>
 
       <!-- controls -->
@@ -112,7 +151,6 @@
       </form>
     </div>
 
-    <p style="margin-top:36px;"><a href="index.html" style="font-family:'Inter',sans-serif;font-size:11px;font-weight:600;letter-spacing:.18em;text-transform:uppercase;color:#B8B5A8;text-decoration:none;">← Wayo 홈으로 돌아가기</a></p>
   </div>
 </div>
 
@@ -262,7 +300,8 @@ const state={
   mixPublic:'white', mixPrivate:'lgray', artwall:'paint',
   tile:'white', molding:'ceiling', light:'warm',
   zoom:1, theta:0,
-  hasPlan:false, viewMode:'3d'
+  hasPlan:false, viewMode:'3d',
+  planZoom:1, planX:0, planY:0
 };
 
 const $=(id)=>document.getElementById(id);
@@ -543,9 +582,33 @@ panelMount.addEventListener('click',(e)=>{
 
 angleRef.addEventListener('input',(e)=>update({theta:parseFloat(e.target.value)}));
 zoomRef.addEventListener('input',(e)=>update({zoom:parseFloat(e.target.value)}));
-$('zoomInBtn').addEventListener('click',()=>{ const z=Math.min(1.6,+(state.zoom+0.15).toFixed(2)); zoomRef.value=z; update({zoom:z}); });
-$('zoomOutBtn').addEventListener('click',()=>{ const z=Math.max(0.7,+(state.zoom-0.15).toFixed(2)); zoomRef.value=z; update({zoom:z}); });
-$('resetBtn').addEventListener('click',()=>{ zoomRef.value=1; angleRef.value=0; update({zoom:1,theta:0}); });
+
+// 도면 모드에서는 +/− 버튼과 Reset이 도면 확대·이동을 제어한다
+const inPlanMode=()=>state.viewMode==='plan'&&state.hasPlan;
+$('zoomInBtn').addEventListener('click',()=>{
+  if(inPlanMode()){ setPlanZoom(state.planZoom+0.25); return; }
+  const z=Math.min(1.6,+(state.zoom+0.15).toFixed(2)); zoomRef.value=z; update({zoom:z});
+});
+$('zoomOutBtn').addEventListener('click',()=>{
+  if(inPlanMode()){ setPlanZoom(state.planZoom-0.25); return; }
+  const z=Math.max(0.7,+(state.zoom-0.15).toFixed(2)); zoomRef.value=z; update({zoom:z});
+});
+$('resetBtn').addEventListener('click',()=>{
+  if(inPlanMode()){ state.planZoom=1; state.planX=0; state.planY=0; applyPlanTransform(); return; }
+  zoomRef.value=1; angleRef.value=0; update({zoom:1,theta:0});
+});
+
+function setPlanZoom(z){
+  z=Math.min(4,Math.max(1,+z.toFixed(2)));
+  state.planZoom=z;
+  if(z===1){ state.planX=0; state.planY=0; } // 기본 배율로 돌아오면 위치도 원점으로
+  applyPlanTransform();
+}
+function applyPlanTransform(){
+  const img=$('planImg');
+  img.style.transform=`translate(${state.planX}px,${state.planY}px) scale(${state.planZoom})`;
+  img.style.cursor=state.planZoom>1?'grab':'default';
+}
 
 // drag to rotate
 (function(){
@@ -561,6 +624,30 @@ $('resetBtn').addEventListener('click',()=>{ zoomRef.value=1; angleRef.value=0; 
   svgMount.addEventListener('touchstart',down,{passive:true}); svgMount.addEventListener('touchmove',move,{passive:true}); svgMount.addEventListener('touchend',up);
 })();
 
+// drag to pan (uploaded plan, 확대 상태에서만)
+(function(){
+  let dragging=false,lx=0,ly=0;
+  const pv=$('planView');
+  const clampPan=()=>{
+    // 이미지가 화면 밖으로 완전히 사라지지 않도록 이동 범위 제한
+    const mx=pv.clientWidth*(state.planZoom-1)/2+80;
+    const my=pv.clientHeight*(state.planZoom-1)/2+80;
+    state.planX=Math.max(-mx,Math.min(mx,state.planX));
+    state.planY=Math.max(-my,Math.min(my,state.planY));
+  };
+  const down=(e)=>{ if(state.planZoom<=1) return; dragging=true;
+    const p=e.touches?e.touches[0]:e; lx=p.clientX; ly=p.clientY;
+    $('planImg').style.cursor='grabbing'; };
+  const move=(e)=>{ if(!dragging) return;
+    const p=e.touches?e.touches[0]:e;
+    state.planX+=p.clientX-lx; state.planY+=p.clientY-ly;
+    lx=p.clientX; ly=p.clientY;
+    clampPan(); applyPlanTransform(); };
+  const up=()=>{ if(!dragging) return; dragging=false; applyPlanTransform(); };
+  pv.addEventListener('mousedown',down); window.addEventListener('mousemove',move); window.addEventListener('mouseup',up);
+  pv.addEventListener('touchstart',down,{passive:true}); pv.addEventListener('touchmove',move,{passive:true}); pv.addEventListener('touchend',up);
+})();
+
 // 상담 신청 (데모: 실제 전송 없이 접수 안내만 표시)
 $('regForm').addEventListener('submit',(e)=>{
   e.preventDefault(); e.target.reset();
@@ -574,8 +661,6 @@ function syncViewUI(){
   const plan=state.viewMode==='plan'&&state.hasPlan;
   $('planView').style.display=plan?'block':'none';
   $('sliderPill').style.display=plan?'none':'flex';
-  $('zoomCtls').style.display=plan?'none':'flex';
-  $('resetBtn').style.display=plan?'none':'';
   $('viewToggleBtn').style.display=state.hasPlan?'':'none';
   $('viewToggleBtn').textContent=plan?'3D 보기':'내 도면 보기';
   $('planRemoveBtn').style.display=plan?'':'none';
@@ -588,14 +673,27 @@ $('planFile').addEventListener('change',()=>{
   const f=$('planFile').files[0]; if(!f) return;
   if(!f.type.startsWith('image/')){ showToast('이미지 파일(JPG·PNG)만 올릴 수 있습니다.'); $('planFile').value=''; return; }
   const rd=new FileReader();
-  rd.onload=()=>{ $('planImg').src=rd.result; state.hasPlan=true; state.viewMode='plan'; syncViewUI(); };
+  rd.onload=()=>{ $('planImg').src=rd.result; state.hasPlan=true; state.viewMode='plan';
+    state.planZoom=1; state.planX=0; state.planY=0; applyPlanTransform(); syncViewUI(); };
   rd.readAsDataURL(f);
   $('planFile').value='';
 });
 $('viewToggleBtn').addEventListener('click',()=>{ state.viewMode=(state.viewMode==='plan')?'3d':'plan'; syncViewUI(); });
-$('planRemoveBtn').addEventListener('click',()=>{ state.hasPlan=false; state.viewMode='3d'; $('planImg').src=''; syncViewUI(); });
+$('planRemoveBtn').addEventListener('click',()=>{ state.hasPlan=false; state.viewMode='3d'; state.planZoom=1; state.planX=0; state.planY=0; $('planImg').src=''; applyPlanTransform(); syncViewUI(); });
 
-/* ═══════════════ 11. 시작 ═══════════════ */
+/* ═══════════════ 11. 모바일 메뉴 ═══════════════ */
+(function(){
+  const burger=$('burger'), mnav=$('mnav');
+  burger.addEventListener('click',()=>{
+    const open=mnav.classList.toggle('open');
+    burger.setAttribute('aria-expanded',open?'true':'false');
+  });
+  mnav.querySelectorAll('a').forEach((a)=>{
+    a.addEventListener('click',()=>{ mnav.classList.remove('open'); burger.setAttribute('aria-expanded','false'); });
+  });
+})();
+
+/* ═══════════════ 12. 시작 ═══════════════ */
 rerender();
 syncViewUI();
 loadSheet();
