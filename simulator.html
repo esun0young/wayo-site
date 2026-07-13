@@ -93,18 +93,16 @@
       <!-- svg mount -->
       <div id="svgMount" style="flex:1;display:flex;align-items:center;justify-content:center;cursor:grab;touch-action:pan-y;"></div>
 
-      <!-- uploaded floor plan view: 사진은 브라우저 밖으로 나가지 않음. 사용자가 방 영역을 그리면 그 영역이 선택한 바닥·타일 색으로 칠해짐 (면적 기반 견적은 아직 미지원 — 실측 없이는 배율을 알 수 없음) -->
+      <!-- uploaded floor plan view: 사진은 브라우저 밖으로 나가지 않음. 방을 클릭하면 벽선 안쪽이 자동 인식되어 선택한 바닥·타일 색으로 칠해지고, 마감재를 바꾸면 즉시 다시 칠해짐 (면적 기반 견적은 아직 미지원 — 실측 없이는 배율을 알 수 없음) -->
       <div id="planView" style="position:absolute;inset:0;z-index:1;display:none;overflow:hidden;background:linear-gradient(180deg,#EDE8E1 0%,#E6E0D6 100%);padding:clamp(64px,10vh,100px) clamp(16px,2.4vw,28px) clamp(150px,24vh,210px);">
         <img id="planImg" alt="업로드한 도면" draggable="false" style="width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 8px 24px rgba(10,10,10,.14));user-select:none;-webkit-user-drag:none;transform-origin:center center;will-change:transform;">
         <svg id="planRegionsSvg" viewBox="0 0 100 100" preserveAspectRatio="none" style="position:absolute;pointer-events:none;"></svg>
-        <p id="planHint" style="position:absolute;left:50%;transform:translateX(-50%);top:clamp(18px,2.6vw,30px);font-size:11px;color:rgba(10,10,10,.45);background:rgba(245,242,238,.8);backdrop-filter:blur(6px);padding:6px 14px;border-radius:999px;white-space:nowrap;">내 도면 (참고용) · ＋/−로 확대, 드래그로 이동 · 파일은 이 브라우저에서만 사용됩니다</p>
+        <p id="planHint" style="position:absolute;left:50%;transform:translateX(-50%);top:clamp(18px,2.6vw,30px);font-size:11px;color:rgba(10,10,10,.45);background:rgba(245,242,238,.8);backdrop-filter:blur(6px);padding:6px 14px;border-radius:999px;white-space:nowrap;">내 도면 (참고용) · '방 칠하기'로 방을 클릭하면 마감재가 입혀집니다 · 파일은 이 브라우저에서만 사용됩니다</p>
 
-        <!-- 영역 그리기 중 하단 안내/조작 바 -->
+        <!-- 방 칠하기 중 하단 안내 바 -->
         <div id="planDrawBar" style="display:none;position:absolute;left:50%;transform:translateX(-50%);bottom:clamp(96px,15vh,132px);z-index:6;align-items:center;gap:10px;background:rgba(10,10,10,.85);backdrop-filter:blur(8px);padding:10px 10px 10px 18px;border-radius:999px;">
-          <span id="planDrawHint" style="font-size:11.5px;color:#F5F2EE;white-space:nowrap;">클릭해서 모서리를 표시하세요</span>
-          <button id="planUndoPtBtn" class="pill-btn" style="background:rgba(245,242,238,.14);color:#F5F2EE;">점 삭제</button>
-          <button id="planFinishBtn" class="pill-btn" style="background:#FF8282;color:#0A0A0A;">완료</button>
-          <button id="planDrawCancelBtn" class="pill-btn" style="background:rgba(245,242,238,.14);color:#F5F2EE;">취소</button>
+          <span id="planDrawHint" style="font-size:11.5px;color:#F5F2EE;white-space:nowrap;">도면에서 방 안쪽을 클릭하세요 — 영역이 자동으로 잡힙니다</span>
+          <button id="planDrawCancelBtn" class="pill-btn" style="background:rgba(245,242,238,.14);color:#F5F2EE;">종료</button>
         </div>
 
         <!-- 도형 완료 후 마감재 종류 선택 -->
@@ -125,10 +123,10 @@
         <button id="resetBtn" class="pill-btn">Reset ↺</button>
         <button id="planUploadBtn" class="pill-btn" style="color:#0A0A0A;">내 도면 올리기 ↑</button>
         <button id="viewToggleBtn" class="pill-btn" style="display:none;">내 도면 보기</button>
-        <button id="planDrawBtn" class="pill-btn" style="display:none;">영역 그리기 ✎</button>
+        <button id="planDrawBtn" class="pill-btn" style="display:none;">방 칠하기 ✎</button>
         <button id="planClearRegionsBtn" class="pill-btn" style="display:none;color:rgba(10,10,10,.45);">영역 지우기</button>
         <button id="planRemoveBtn" class="pill-btn" style="display:none;color:rgba(10,10,10,.45);">도면 삭제 ✕</button>
-        <input type="file" id="planFile" accept="image/*" hidden>
+        <input type="file" id="planFile" accept="image/*,.heic,.heif,.tif,.tiff,.bmp,.svg,.avif,.webp,.jfif" hidden>
       </div>
 
       <!-- angle + zoom sliders -->
@@ -793,8 +791,7 @@ function renderRegions(){
     html+=`<polygon points="${poly(reg.points)}" fill="${c}" fill-opacity="0.55" stroke="${c}" stroke-width="0.5" vector-effect="non-scaling-stroke"/>`;
   });
   if(state.planDraft.length){
-    html+=`<polyline points="${poly(state.planDraft)}" fill="none" stroke="#FF8282" stroke-width="0.6" vector-effect="non-scaling-stroke"/>`;
-    state.planDraft.forEach(p=>{ html+=`<circle cx="${(p[0]*100).toFixed(2)}" cy="${(p[1]*100).toFixed(2)}" r="1" fill="#FF8282"/>`; });
+    html+=`<polygon points="${poly(state.planDraft)}" fill="#FF8282" fill-opacity="0.38" stroke="#FF8282" stroke-width="0.6" vector-effect="non-scaling-stroke"/>`;
   }
   svg.innerHTML=html;
 }
@@ -802,30 +799,109 @@ function renderRegions(){
 function setDrawMode(on){
   state.drawMode=on; state.planDraft=[];
   $('planRegionsSvg').style.pointerEvents=on?'auto':'none';
+  $('planRegionsSvg').style.cursor=on?'crosshair':'';
   $('planDrawBar').style.display=on?'flex':'none';
   $('planTagBar').style.display='none';
   $('planHint').style.display=on?'none':'block';
-  $('planDrawBtn').textContent=on?'그리기 종료 ✕':'영역 그리기 ✎';
-  updateDrawHint();
+  $('planDrawBtn').textContent=on?'칠하기 종료 ✕':'방 칠하기 ✎';
   renderRegions();
 }
-function updateDrawHint(){
-  const n=state.planDraft.length;
-  $('planDrawHint').textContent = n===0 ? '클릭해서 모서리를 표시하세요'
-    : n<3 ? `${n}개 점 · 2개 더 찍으면 완료 가능`
-    : `${n}개 점 · 완료를 눌러 도형을 닫으세요`;
+
+/* ── 방 자동 인식 (매직 완드) ──
+   클릭 지점과 색이 비슷한 픽셀을 플러드필로 묶으면 벽선(어두운 선)이 자연스러운 경계가 된다.
+   결과 마스크의 외곽선을 다각형으로 바꿔 기존 planRegions 구조에 그대로 실으므로,
+   이후 마감재 변경 시 재도색은 기존 renderRegions 경로가 처리한다. */
+let planPixels=null; // 업로드된 도면의 축소 픽셀 캐시 (도면 교체 시 무효화)
+function getPlanPixels(){
+  if(planPixels) return planPixels;
+  const img=$('planImg'); if(!img.naturalWidth||!img.naturalHeight) return null;
+  const MAX=720, sc=Math.min(1,MAX/Math.max(img.naturalWidth,img.naturalHeight));
+  const w=Math.max(1,Math.round(img.naturalWidth*sc)), h=Math.max(1,Math.round(img.naturalHeight*sc));
+  const cv=document.createElement('canvas'); cv.width=w; cv.height=h;
+  const ctx=cv.getContext('2d',{willReadFrequently:true});
+  ctx.drawImage(img,0,0,w,h);
+  try{ planPixels={w,h,data:ctx.getImageData(0,0,w,h).data}; }catch(e){ return null; }
+  return planPixels;
+}
+
+function wandRegionAt(nx,ny){
+  const p=getPlanPixels(); if(!p) return null;
+  const {w,h,data}=p;
+  const sx=Math.min(w-1,Math.max(0,Math.round(nx*w))), sy=Math.min(h-1,Math.max(0,Math.round(ny*h)));
+  const si=(sy*w+sx)*4, sr=data[si], sg=data[si+1], sb=data[si+2];
+  const TOL=3100; // RGB 거리 제곱 합 (채널당 ~32) — 벽선·가구선은 확실히 걸러지는 수준
+  const near=(idx)=>{ const i=idx*4;
+    return (data[i]-sr)*(data[i]-sr)+(data[i+1]-sg)*(data[i+1]-sg)+(data[i+2]-sb)*(data[i+2]-sb)<TOL; };
+  const mask=new Uint8Array(w*h);
+  const stack=[sy*w+sx]; mask[sy*w+sx]=1; let area=0;
+  while(stack.length){
+    const idx=stack.pop(); area++;
+    const x=idx%w;
+    if(x>0     &&!mask[idx-1]&&near(idx-1)){ mask[idx-1]=1; stack.push(idx-1); }
+    if(x<w-1   &&!mask[idx+1]&&near(idx+1)){ mask[idx+1]=1; stack.push(idx+1); }
+    if(idx>=w  &&!mask[idx-w]&&near(idx-w)){ mask[idx-w]=1; stack.push(idx-w); }
+    if(idx<w*(h-1)&&!mask[idx+w]&&near(idx+w)){ mask[idx+w]=1; stack.push(idx+w); }
+  }
+  if(area<w*h*0.002) return null;  // 너무 작음 — 벽선이나 글자를 클릭한 경우
+  if(area>w*h*0.6) return null;    // 배경까지 번짐 — 방으로 볼 수 없음
+  const t=traceMaskOutline(mask,w,h); if(!t.loop||t.loop.length<3) return null;
+  if(area<t.totalEdges*5) return null; // 면적 대비 둘레가 큰 가는 선 뭉치(벽선·글자·가구선) — 방이 아님
+  const simp=rdp(t.loop,1.4); if(simp.length<3) return null;
+  return simp.map(pt=>[pt[0]/w,pt[1]/h]);
+}
+
+// 마스크 경계의 단위 변(채워진 픽셀과 빈 픽셀 사이)을 방향을 통일해 모은 뒤 이어붙여 외곽 루프를 만든다
+function traceMaskOutline(mask,w,h){
+  const at=(x,y)=>(x>=0&&y>=0&&x<w&&y<h)?mask[y*w+x]:0;
+  const K=(x,y)=>x+','+y;
+  const seg=new Map(); // 시작 꼭짓점 → 끝 꼭짓점 목록 (대각 접점에선 2개일 수 있음)
+  let totalEdges=0;
+  const add=(x1,y1,x2,y2)=>{ totalEdges++; const k=K(x1,y1); const a=seg.get(k); if(a) a.push([x2,y2]); else seg.set(k,[[x2,y2]]); };
+  for(let y=0;y<h;y++)for(let x=0;x<w;x++){
+    if(!mask[y*w+x]) continue;
+    if(!at(x,y-1)) add(x+1,y,   x,y);
+    if(!at(x,y+1)) add(x,y+1,   x+1,y+1);
+    if(!at(x-1,y)) add(x,y,     x,y+1);
+    if(!at(x+1,y)) add(x+1,y+1, x+1,y);
+  }
+  let best=null;
+  for(const s0 of [...seg.keys()]){
+    if(!seg.has(s0)) continue;
+    const loop=[]; let key=s0;
+    while(seg.has(key)){
+      const arr=seg.get(key); const nxt=arr.pop(); if(!arr.length) seg.delete(key);
+      loop.push(nxt); key=K(nxt[0],nxt[1]);
+    }
+    if(!best||loop.length>best.length) best=loop;
+  }
+  return {loop:best,totalEdges};
+}
+
+// Ramer–Douglas–Peucker 단순화 (eps: 마스크 픽셀 단위)
+function rdp(pts,eps){
+  if(pts.length<3) return pts;
+  const d2=(pt,a,b)=>{
+    const dx=b[0]-a[0], dy=b[1]-a[1], L=dx*dx+dy*dy||1;
+    const t=Math.max(0,Math.min(1,((pt[0]-a[0])*dx+(pt[1]-a[1])*dy)/L));
+    const px=a[0]+t*dx-pt[0], py=a[1]+t*dy-pt[1];
+    return px*px+py*py;
+  };
+  const keep=new Uint8Array(pts.length); keep[0]=keep[pts.length-1]=1;
+  const stack=[[0,pts.length-1]];
+  while(stack.length){
+    const [i,j]=stack.pop();
+    let mx=-1,mi=-1;
+    for(let k=i+1;k<j;k++){ const d=d2(pts[k],pts[i],pts[j]); if(d>mx){mx=d;mi=k;} }
+    if(mx>eps*eps){ keep[mi]=1; stack.push([i,mi],[mi,j]); }
+  }
+  return pts.filter((_,i)=>keep[i]);
 }
 
 $('planDrawBtn').addEventListener('click',()=>setDrawMode(!state.drawMode));
 $('planClearRegionsBtn').addEventListener('click',()=>{ state.planRegions=[]; renderRegions(); syncViewUI(); });
 $('planDrawCancelBtn').addEventListener('click',()=>setDrawMode(false));
-$('planUndoPtBtn').addEventListener('click',()=>{ state.planDraft.pop(); updateDrawHint(); renderRegions(); });
-$('planFinishBtn').addEventListener('click',()=>{
-  if(state.planDraft.length<3){ showToast('3개 이상의 점을 찍어야 영역을 만들 수 있습니다.'); return; }
-  $('planDrawBar').style.display='none';
-  $('planTagBar').style.display='flex';
-});
 $('planTagCancelBtn').addEventListener('click',()=>{
+  state.planDraft=[]; renderRegions();
   $('planTagBar').style.display='none';
   $('planDrawBar').style.display='flex';
 });
@@ -835,16 +911,21 @@ document.querySelectorAll('.planTagOpt').forEach(btn=>{
     state.planDraft=[];
     $('planTagBar').style.display='none';
     $('planDrawBar').style.display='flex';
-    updateDrawHint(); renderRegions(); syncViewUI();
+    renderRegions(); syncViewUI();
   });
 });
 $('planRegionsSvg').addEventListener('click',(e)=>{
   if(!state.drawMode) return;
+  if($('planTagBar').style.display!=='none') return; // 종류 선택 대기 중엔 새 클릭 무시
   const cr=imgContentRect($('planImg')); if(!cr) return;
   const x=(e.clientX-cr.x)/cr.w, y=(e.clientY-cr.y)/cr.h;
   if(x<0||x>1||y<0||y>1) return;
-  state.planDraft.push([x,y]);
-  updateDrawHint(); renderRegions();
+  const region=wandRegionAt(x,y);
+  if(!region){ showToast('방을 인식하지 못했습니다 — 벽선으로 둘러싸인 안쪽을 클릭해보세요.'); return; }
+  state.planDraft=region;
+  renderRegions();
+  $('planDrawBar').style.display='none';
+  $('planTagBar').style.display='flex';
 });
 window.addEventListener('resize',()=>{ if(state.viewMode==='plan') syncRegionOverlay(); });
 
@@ -909,20 +990,62 @@ function syncViewUI(){
   if(plan) syncRegionOverlay(); else setDrawMode(false);
 }
 
+// 어떤 이미지 파일이든 도면으로 쓸 수 있게: 브라우저가 바로 그릴 수 있는 포맷은 그대로,
+// HEIC(아이폰 사진)·TIFF(스캔 도면)처럼 못 그리는 포맷은 브라우저 안에서 변환 후 표시 (사진은 여전히 밖으로 나가지 않음)
+const IMG_EXT_RE=/\.(jpe?g|jfif|pjpe?g|png|gif|webp|avif|bmp|dib|svgz?|ico|tiff?|heic|heif)$/i;
+let planObjectURL=null;
+function setPlanSrc(src){
+  if(planObjectURL){ URL.revokeObjectURL(planObjectURL); planObjectURL=null; }
+  if(src.startsWith('blob:')) planObjectURL=src;
+  planPixels=null;
+  $('planImg').src=src; state.hasPlan=true; state.viewMode='plan';
+  state.planZoom=1; state.planX=0; state.planY=0; state.planRegions=[]; setDrawMode(false);
+  applyPlanTransform(); syncViewUI();
+  showToast("'방 칠하기 ✎'를 누르고 방을 클릭하면 고른 마감재가 도면에 입혀집니다.");
+}
+const loadedScripts={};
+function loadScriptOnce(url){
+  return loadedScripts[url]||(loadedScripts[url]=new Promise((res,rej)=>{
+    const s=document.createElement('script'); s.src=url; s.onload=res;
+    s.onerror=()=>{ delete loadedScripts[url]; rej(new Error('script load failed: '+url)); };
+    document.head.appendChild(s);
+  }));
+}
+function canBrowserRender(url){
+  return new Promise((res)=>{ const im=new Image(); im.onload=()=>res(true); im.onerror=()=>res(false); im.src=url; });
+}
+async function planFileToURL(f){
+  const url=URL.createObjectURL(f);
+  if(await canBrowserRender(url)) return url; // JPG·PNG·WebP·GIF·SVG·BMP·AVIF·ICO 등
+  URL.revokeObjectURL(url);
+  const name=f.name.toLowerCase();
+  if(/\.(heic|heif)$/.test(name)||/heic|heif/.test(f.type)){
+    showToast('아이폰 사진(HEIC)을 변환하는 중입니다…');
+    await loadScriptOnce('https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js');
+    const out=await heic2any({blob:f,toType:'image/jpeg',quality:0.92});
+    return URL.createObjectURL(Array.isArray(out)?out[0]:out);
+  }
+  if(/\.tiff?$/.test(name)||/tiff/.test(f.type)){
+    showToast('스캔 이미지(TIFF)를 변환하는 중입니다…');
+    await loadScriptOnce('https://cdn.jsdelivr.net/npm/utif@3.1.0/UTIF.min.js');
+    const buf=await f.arrayBuffer();
+    const ifds=UTIF.decode(buf); UTIF.decodeImage(buf,ifds[0]);
+    const cv=document.createElement('canvas'); cv.width=ifds[0].width; cv.height=ifds[0].height;
+    cv.getContext('2d').putImageData(new ImageData(new Uint8ClampedArray(UTIF.toRGBA8(ifds[0])),cv.width,cv.height),0,0);
+    return await new Promise((res,rej)=>cv.toBlob((b)=>b?res(URL.createObjectURL(b)):rej(new Error('tiff convert failed')),'image/png'));
+  }
+  throw new Error('unsupported image format');
+}
 $('planUploadBtn').addEventListener('click',()=>$('planFile').click());
-$('planFile').addEventListener('change',()=>{
-  const f=$('planFile').files[0]; if(!f) return;
-  if(!f.type.startsWith('image/')){ showToast('이미지 파일(JPG·PNG)만 올릴 수 있습니다.'); $('planFile').value=''; return; }
-  const rd=new FileReader();
-  rd.onload=()=>{ $('planImg').src=rd.result; state.hasPlan=true; state.viewMode='plan';
-    state.planZoom=1; state.planX=0; state.planY=0; state.planRegions=[]; setDrawMode(false);
-    applyPlanTransform(); syncViewUI(); };
-  rd.readAsDataURL(f);
-  $('planFile').value='';
+$('planFile').addEventListener('change',async()=>{
+  const f=$('planFile').files[0]; $('planFile').value=''; if(!f) return;
+  if(!f.type.startsWith('image/')&&!IMG_EXT_RE.test(f.name)){ showToast('이미지 파일만 올릴 수 있습니다.'); return; }
+  try{ setPlanSrc(await planFileToURL(f)); }
+  catch(err){ showToast('이 이미지를 열 수 없습니다. JPG나 PNG로 변환해 다시 올려주세요.'); }
 });
 $('planImg').addEventListener('load',syncRegionOverlay);
 $('viewToggleBtn').addEventListener('click',()=>{ state.viewMode=(state.viewMode==='plan')?'3d':'plan'; syncViewUI(); });
-$('planRemoveBtn').addEventListener('click',()=>{ state.hasPlan=false; state.viewMode='3d'; state.planZoom=1; state.planX=0; state.planY=0; state.planRegions=[]; setDrawMode(false); $('planImg').src=''; applyPlanTransform(); syncViewUI(); });
+$('planRemoveBtn').addEventListener('click',()=>{ state.hasPlan=false; state.viewMode='3d'; state.planZoom=1; state.planX=0; state.planY=0; state.planRegions=[]; setDrawMode(false); $('planImg').src=''; planPixels=null; if(planObjectURL){ URL.revokeObjectURL(planObjectURL); planObjectURL=null; } applyPlanTransform(); syncViewUI(); });
 
 /* ═══════════════ 11. 모바일 메뉴 ═══════════════ */
 (function(){
